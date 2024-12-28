@@ -30,3 +30,9 @@ C:\Users\ying.cai\source\repos\TipShaping\bin\Debug\net7.0-windows\runtimes\unix
 C:\Users\ying.cai\source\repos\TipShaping\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.IO.Ports.dll
 C:\Users\ying.cai\source\repos\TipShaping\bin\Debug\net7.0-windows\System.CodeDom.dll
 C:\Users\ying.cai\source\repos\TipShaping\bin\Debug\net7.0-windows\System.Management.dll
+C:\Users\ying.cai\source\repos\TipShaping\obj\Debug\net7.0-windows\CameraSetting.g.cs
+C:\Users\ying.cai\source\repos\TipShaping\obj\Debug\net7.0-windows\CameraSetting.baml
+C:\Users\ying.cai\source\repos\TipShaping\obj\Debug\net7.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\ying.cai\source\repos\TipShaping\bin\Debug\net7.0-windows\TipShaping.dll.config
+C:\Users\ying.cai\source\repos\TipShaping\bin\Debug\net7.0-windows\System.Drawing.Common.dll
+C:\Users\ying.cai\source\repos\TipShaping\bin\Debug\net7.0-windows\Basler.Pylon.dll

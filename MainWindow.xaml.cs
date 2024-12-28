@@ -20,6 +20,7 @@ using System.Windows.Threading;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
+
 namespace TipShaping
 {
     /// <summary>
@@ -27,112 +28,60 @@ namespace TipShaping
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SerialPort serialPort;
+        
         // Define the field
         private bool[] isAxisEnabled = { false, false, false, false, false, false };
         string[] Max_Pos = {"100","100","50","6", "14", "36000" }; //forward travel limit SA,SF 13mm 30mm
         string[] Min_Pos = {"-100", "-100", "-50","-6", "-14", "-36000" }; //reverse travel limit
-        private string SAlastPosition = string.Empty;
-        private string SFlastPosition = string.Empty;
-        private string LlastPosition = string.Empty;
-        private const double Threshold = 0.001;  // Example: 0.001 mm as the threshold
-        DispatcherTimer timer = new DispatcherTimer();
+        //private string SAlastPosition = string.Empty;
+        //private string SFlastPosition = string.Empty;
+        //private string LlastPosition = string.Empty;
+        
+        
+        private CameraSetting cameraSettingWindow;
+        private BigTechControllerConnection bigTechControllerConnectionWindow;
+        private TrioControllerConnection trioControllerConnectionWindow;
+        
+        private StepperMotorControl stepperMotorControl;
 
         public MainWindow()
         {
+            // Get the screen dimensions
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            // Set the MainWindow position (lower half of the screen)
+            this.Left = 0; // Start at the left edge
+            this.Top = screenHeight / 2; // Start in the middle of the screen
+
             InitializeComponent();
-            LoadAvailablePorts();
-            LoadBaudRates();
-           
+            stepperMotorControl = new StepperMotorControl();
+
+            stepperMotorControl.PositionUpdated += StepperMotorOnPositionUpdated;
+            stepperMotorControl.MovingStatusUpdated += StepperMotorOnMovingStatusUpdated;
+
         }
 
-        private void LoadAvailablePorts()
+        private void StepperMotorOnPositionUpdated(float x, float y, float z)
         {
-            // Clear existing items
-            PortComboBox.Items.Clear();
-
-            // Get all available COM ports
-            string[] ports = SerialPort.GetPortNames();
-
-            // Add each port to the ComboBox
-            foreach (string port in ports)
-            {
-                PortComboBox.Items.Add(port);
-            }
-
-            // Select the first port by default (optional)
-            if (PortComboBox.Items.Count > 0)
-            {
-                PortComboBox.SelectedIndex = 0;
-            }
+            // Update the UI
+            SAMPosTextBox.Text = $"X: {x}";
+            SFMPosTextBox.Text = $"Y: {y}";
+            LMPosTextBox.Text = $"Z: {z}";
         }
-
-        private void LoadBaudRates()
+        private void StepperMotorOnMovingStatusUpdated(bool Moving)
         {
-            // List of commonly used baud rates
-            int[] baudRates = { 9600, 19200, 38400, 57600, 115200 };
-
-            BaudRateComboBox.Items.Clear();
-
-            // Add baud rates to the ComboBox
-            foreach (int baudRate in baudRates)
+            // Update the UI
+            if (Moving)
             {
-                BaudRateComboBox.Items.Add(baudRate);
+                AxisStatus.Text = "Moving";
             }
+            else
+            { AxisStatus.Text = "Idle"; }
 
-            // Set a default selection (optional)
-            BaudRateComboBox.SelectedItem = 115200;
         }
 
-        private void ConnectButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (PortComboBox.SelectedItem == null)
-            {
-                MessageBox.Show("Please select a COM port first.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (BaudRateComboBox.SelectedItem == null)
-            {
-                MessageBox.Show("Please select a baud rate.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            try
-            {
-                if (serialPort == null || !serialPort.IsOpen)
-                {
-                    string selectedPort = PortComboBox.SelectedItem.ToString();
-
-                    int baudRate = (int)BaudRateComboBox.SelectedItem;  // Cast the selected item to an int
 
 
-                    serialPort = new SerialPort(selectedPort, baudRate);
-                    //serialPort = new SerialPort("COM4", 115200);
-                    
-                    serialPort.Open();
-                    serialPort.DtrEnable = true;
-                    serialPort.RtsEnable = true;
-                    StartMonitoringPosition(); //start monitoring the current position of the axes
-                    serialPort.DataReceived += SerialPort_DataReceived;
-                    MessageBox.Show("Connected to " + selectedPort);
-                    ConnectButton.Content = "Disconnect";
-                }
-                else
-                {
-                    StopMonitoringPosition();
-                    serialPort.Close();
-                    MessageBox.Show("Disconnected");
-                    ConnectButton.Content = "Connect";
-                }
-
-               
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-
-        }
 
         private void EnableXButton_Click(object sender, RoutedEventArgs e)
         {
@@ -216,14 +165,14 @@ namespace TipShaping
             {
                 // Send G-code to enable the corresponding stepper motor (X-axis for S1)
                 string enableCommand = "M17 X"; // M17 is the Marlin G-code to engage stepper motors
-                SendCommand(enableCommand);
+                stepperMotorControl.SendCommand(enableCommand);
                 MessageBox.Show("SA Enabled");
             }
             else
             {
                 // Send G-code to disable the corresponding stepper motor
                 string disableCommand = "M18 X"; // M18 disengages the stepper motor
-                SendCommand(disableCommand);
+                stepperMotorControl.SendCommand(disableCommand);
                 MessageBox.Show("SA Disabled");
             }
         }
@@ -243,14 +192,14 @@ namespace TipShaping
             {
                 // Send G-code to enable the corresponding stepper motor (X-axis for S1)
                 string enableCommand = "M17 Y"; // M17 is the Marlin G-code to engage stepper motors
-                SendCommand(enableCommand);
+                stepperMotorControl.SendCommand(enableCommand);
                 MessageBox.Show("SF Enabled");
             }
             else
             {
                 // Send G-code to disable the corresponding stepper motor
                 string disableCommand = "M18 Y"; // M18 disengages the stepper motor
-                SendCommand(disableCommand);
+                stepperMotorControl.SendCommand(disableCommand);
                 MessageBox.Show("SF Disabled");
             }
             
@@ -271,14 +220,14 @@ namespace TipShaping
             {
                 // Send G-code to enable the corresponding stepper motor 
                 string enableCommand = "M17 Z"; // M17 is the Marlin G-code to engage stepper motors
-                SendCommand(enableCommand);
+                stepperMotorControl.SendCommand(enableCommand);
                 MessageBox.Show("L Enabled");
             }
             else
             {
                 // Send G-code to disable the corresponding stepper motor
                 string disableCommand = "M18 Z"; // M18 disengages the stepper motor
-                SendCommand(disableCommand);
+                stepperMotorControl.SendCommand(disableCommand);
                 MessageBox.Show("L Disabled");
             }
         }
@@ -301,71 +250,8 @@ namespace TipShaping
 
 
 
-        private string GenerateGCode(string axisName, string velocity, string distance, string moveType, bool forward)
-        {
-            string gCode = string.Empty;
-
-            string axis = axisName switch
-            {
-                "SA" => "X",
-                "SF" => "Y",
-                "L" => "Z",
-                _ => throw new ArgumentException("Invalid axis name.") // Handle unknown axis names
-            };
-
-
-            string velocityInMMPerMinInString = "0";
-
-            if (double.TryParse(velocity, out double velocityInMMPerSec))
-            {
-                // Convert from mm/s to mm/min
-                double velocityInMMPerMin = velocityInMMPerSec * 60;
-
-                // Convert the result back to string
-                velocityInMMPerMinInString = velocityInMMPerMin.ToString(); // Converts to string
-               
-            }
-            else
-            {
-                
-                throw new ArgumentException("Invalid velocity input.");
-            }
-
-            switch (moveType)
-            {
-                case "Relative Move":
-                    gCode = "G91\n";
-                    break;
-                case "Absolute Move":
-                    gCode = "G90\n";
-                    break;
-                case "Jog":
-                    gCode = "G90\n"; //go to the travel limit?
-                    break;
-                default:
-                    throw new ArgumentException("Unknown move type");
-            }
-
-            var direction = forward ? distance : $"-{distance}";
-            gCode += $" G0 {axis}{direction} F{velocityInMMPerMinInString}";
-            return gCode;
-        }
-
-        private void SendCommand(string command)
-        {
-            // This function should send the GCode to the Marlin controller.
-           // MessageBox.Show($"Sending Command: {command}");
-            //// Implement communication with Marlin (e.g., via serial port).
-            if (serialPort != null && serialPort.IsOpen)
-            {
-                serialPort.WriteLine(command); // Send the G-code command to the connected device
-            }
-            else
-            {
-                MessageBox.Show("Serial port is not connected or open.");
-            }
-
-        }
+       
+       
 
         private void ForwardButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -419,8 +305,8 @@ namespace TipShaping
                         MaxJogPos = MaxJogPos - 0.1;
                         distance = MaxJogPos.ToString();
                     }
-                    var command = GenerateGCode(axisName, velocity, distance, moveType, forward: true);
-                    SendCommand(command);
+                    var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, forward: true);
+                    stepperMotorControl.SendCommand(command);
                 }
                 else
                 {
@@ -436,8 +322,8 @@ namespace TipShaping
                         {
                             double distanceRev = distanceDeg / 360;
 
-                            var command = GenerateGCode(axisName, velocity, distanceRev.ToString(), moveType, forward: true);
-                            SendCommand(command);
+                            var command = stepperMotorControl.GenerateGCode(axisName, velocity, distanceRev.ToString(), moveType, forward: true);
+                            stepperMotorControl.SendCommand(command);
                         }
                         else
                         {
@@ -465,7 +351,7 @@ namespace TipShaping
             if (moveType == "Jog")
             {
                 // Stop jogging
-                SendCommand("M410"); //  stop command
+                stepperMotorControl.SendCommand("M410"); //  stop command
             }
 
         }
@@ -521,8 +407,8 @@ namespace TipShaping
                         MinJogPos = Math.Abs(MinJogPos) - 0.1;
                         distance = MinJogPos.ToString();
                     }
-                    var command = GenerateGCode(axisName, velocity, distance, moveType, forward: false);
-                    SendCommand(command);
+                    var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, forward: false);
+                    stepperMotorControl.SendCommand(command);
                 }
                 else
                 {
@@ -538,8 +424,8 @@ namespace TipShaping
                         {
                             double distanceRev = distanceDeg / 360;
 
-                            var command = GenerateGCode(axisName, velocity, distanceRev.ToString(), moveType, forward: false);
-                            SendCommand(command);
+                            var command = stepperMotorControl.GenerateGCode(axisName, velocity, distanceRev.ToString(), moveType, forward: false);
+                            stepperMotorControl.SendCommand(command);
                         }
                         else
                         {
@@ -567,7 +453,7 @@ namespace TipShaping
             if (moveType == "Jog")
             {
                 // Stop jogging
-                SendCommand("M410"); // Replace with your controller's specific stop command
+                stepperMotorControl.SendCommand("M410"); // Replace with your controller's specific stop command
 
             }
     }
@@ -594,18 +480,18 @@ namespace TipShaping
                 MessageBox.Show("Enable the axis SA first.");
                 return;
             }else
-            { 
-                SendCommand("G28 X");
+            {
+                stepperMotorControl.SendCommand("G28 X");
                 while (AxisStatus.Text == "Moving")
                 {
                     //wait
                 }
-                SendCommand("G91\n G0 X7 F120");
+                stepperMotorControl.SendCommand("G91\n G0 X7 F120");
                 while (AxisStatus.Text == "Moving")
                 {
                     //wait
                 }
-                SendCommand("G92 X0");
+                stepperMotorControl.SendCommand("G92 X0");
             }
            
         }
@@ -619,17 +505,17 @@ namespace TipShaping
             }
             else
             {
-                SendCommand("G28 Y");
+                stepperMotorControl.SendCommand("G28 Y");
                 while (AxisStatus.Text == "Moving")
                 {
                     //wait
                 }
-                SendCommand("G91\n G0 Y15 F120");
+                stepperMotorControl.SendCommand("G91\n G0 Y15 F120");
                 while (AxisStatus.Text == "Moving")
                 {
                     //wait
                 }
-                SendCommand("G92 Y0");
+                stepperMotorControl.SendCommand("G92 Y0");
             }
         }
 
@@ -647,193 +533,16 @@ namespace TipShaping
                 {
                     //wait
                 }
-                SendCommand("G92 Z0");
+                stepperMotorControl.SendCommand("G92 Z0");
             }
 
         }
 
 
 
-        private void SendButton_Click(object sender, RoutedEventArgs e)
-        {
-            string command = CommandInput.Text;
-            if (command != "")
-            // Send the command 
-            { SendCommand(command); }
-
-        }
-
-        /**********Detect position every 1s*******************/
-        // Start continuous position reporting
-        private async void StartMonitoringPosition()
-        {
-            // wait for 1 seconds to make sure serial port is open
-            await Task.Delay(1000);
-            // Send M154 command to start reporting positions every 1 second
-            //SendCommand("M154 S1");
-            SendCommand("M114 R");
-
-            // Optionally, can also use a timer for periodic status checks (in case of slower responses)
-            timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(1000) // 1 second interval
-            };
-            timer.Tick += (s, e) => SendCommand("M114 R");
-            timer.Start();
-        }
-
-        // Stop continuous reporting
-        private void StopMonitoringPosition()
-        {
-            // Stop the timer to prevent further M114 commands
-            if (timer != null)
-            {
-                timer.Stop();
-                timer.Tick -= (s, e) => SendCommand("M114 R"); // Unsubscribe from the event
-                timer = null;
-            }
-
-            // Optionally close the serial port if required
-            if (serialPort.IsOpen)
-            {
-                serialPort.Close();
-            }
-        }
-
-        static float ExtractValue(Regex regex, string input)
-        {
-            Match match = regex.Match(input);
-            if (match.Success)
-            {
-                return float.Parse(match.Groups[1].Value);
-            }
-            else
-            {
-                throw new Exception("Value not found.");
-            }
-        }
-
-        // Handle incoming data from the serial port
-        // Handle incoming data from the serial port  X:-6.50 Y:2.13 Z:-2685.00 E:0.01 Count X:-20800 Y:6817 Z:-8592000
-        // Handle incoming data from the serial port
-        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            try
-            {
-                // Read the line of data received from the serial port
-                string data = serialPort.ReadLine().Trim();  // Trim any unnecessary whitespace or newline characters
-                Debug.WriteLine($"Received Data: {data}");
-
-                if (data.StartsWith("X:"))
-                {
-                    // Regular expressions for X, Y, and Z values
-                    Regex regexX = new Regex(@"X:\s*(-?\d+(\.\d+)?)");
-                    Regex regexY = new Regex(@"Y:\s*(-?\d+(\.\d+)?)");
-                    Regex regexZ = new Regex(@"Z:\s*(-?\d+(\.\d+)?)");
-
-                    // Extract X, Y, and Z values
-                    float xValue = ExtractValue(regexX, data);
-                    float yValue = ExtractValue(regexY, data);
-                    float zValue = ExtractValue(regexZ, data);
-
-                    Dispatcher.Invoke(() => UpdatePositionDisplay(xValue.ToString(), yValue.ToString(), zValue.ToString()));
-
-                    if (SAlastPosition=="" || SFlastPosition == "" || LlastPosition == "" )
-                    {
-                        SAlastPosition = xValue.ToString();
-                        SFlastPosition = yValue.ToString();
-                        LlastPosition = zValue.ToString();
-                    }
 
 
-                    // Update the UI to show "Moving"
-                    if (HasSignificantMovement(xValue.ToString(), SAlastPosition, Threshold) ||
-                        HasSignificantMovement(yValue.ToString(), SFlastPosition, Threshold) ||
-                        HasSignificantMovement(zValue.ToString(), LlastPosition, Threshold))
-                    {
-                        // Update last known positions if significant movement is detected
-                        SAlastPosition = xValue.ToString();
-                        SFlastPosition = yValue.ToString();
-                        LlastPosition = zValue.ToString();
-
-
-
-                        // Update the UI to show "Moving"
-                        Dispatcher.Invoke(() => UpdateStatusDisplay("Moving"));
-                    }
-                    else
-                    {
-                        // If no significant movement, show "Idle"
-                        Dispatcher.Invoke(() => UpdateStatusDisplay("Idle"));
-                    }
-
-                }
-
-                
-            }
-            catch (Exception ex)
-            {
-                // If there's an error reading from the serial port, show an error message
-                Dispatcher.Invoke(() => MessageBox.Show($"Error reading from serial port: {ex.Message}"));
-            }
-        }
-
-
-
-
-        // check if the movement is significant
-        private bool HasSignificantMovement(string currentPos, string lastPos, double threshold) 
-        {
-            // Convert the position strings to double values
-            double currentPosition = double.Parse(currentPos);
-            double lastPosition = double.Parse(lastPos);
-
-            // Check if the difference between current and last position exceeds the threshold
-            return Math.Abs(currentPosition - lastPosition) > threshold;
-        }
-
-        // Update the UI with the current status
-        private void UpdateStatusDisplay(string status)
-        {
-            AxisStatus.Text = status;
-
-        }
-
-        // Extract the position for a specific axis from the data string
-        private string ExtractAxisPosition(string data, string axis)
-        {
-            try
-            {
-                // Log the data for debugging
-                Debug.WriteLine($"Received Data: {data}");
-
-                // Regex pattern to extract the axis position as a number (including potential decimals or negative signs)
-                string pattern = $@"{axis}([\-0-9.]+)";
-
-                Regex regex = new Regex(pattern);
-                Match match = regex.Match(data);
-
-                // If the axis is found in the data
-                if (match.Success)
-                {
-                    // Return the extracted position value
-                    Debug.WriteLine($"{axis} Position Extracted: {match.Groups[1].Value}");
-                    return match.Groups[1].Value;
-                }
-                else
-                {
-                    // Log if the axis was not found
-                    Debug.WriteLine($"Axis {axis} not found in data.");
-                    return "N/A"; // Or return an appropriate default value
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors
-                Debug.WriteLine($"Error extracting axis position: {ex.Message}");
-                return "Error"; // Return an error message if something goes wrong
-            }
-        }
+        
 
 
 
@@ -872,13 +581,13 @@ namespace TipShaping
         // Window closing event to stop monitoring
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            StopMonitoringPosition();
+            stepperMotorControl.StopMonitoringPosition();
         }
 
         private void StopAllMotion_Click(object sender, RoutedEventArgs e)
         {
 
-            SendCommand("M410"); //Quickstop
+            stepperMotorControl.SendCommand("M410"); //Quickstop
         }
 
         private void AxisSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -914,6 +623,101 @@ namespace TipShaping
             bool isNotJog = MoveTypeSelection.SelectedItem is ComboBoxItem moveTypeItem && moveTypeItem.Content.ToString() != "Jog";
 
             RotationButtonsPanel.Visibility = isAxisL && isNotJog ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void OpenFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExportFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AxisSetting_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CameraSetting_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if (cameraSettingWindow == null || !cameraSettingWindow.IsVisible)
+            {
+                cameraSettingWindow = new CameraSetting();
+
+          
+                // 窗口关闭后清理资源
+                cameraSettingWindow.Closed += (s, args) =>
+                {
+                    cameraSettingWindow = null;
+                    Debug.Print("CameraSetting window closed.");
+                };
+
+                cameraSettingWindow.Show();
+            }
+            else
+            {
+                cameraSettingWindow.Focus(); // 如果窗口已打开，则将其置于前台
+            }
+        }
+
+        private void TrioControllerConnection_Click(object sender, RoutedEventArgs e)
+        {
+            if (trioControllerConnectionWindow == null || !trioControllerConnectionWindow.IsVisible)
+            {
+                trioControllerConnectionWindow = new TrioControllerConnection();
+
+
+                // 窗口关闭后清理资源
+                trioControllerConnectionWindow.Closed += (s, args) =>
+                {
+                    trioControllerConnectionWindow = null;
+                    Debug.Print("trioControllerConnection window closed.");
+                };
+
+                trioControllerConnectionWindow.ShowDialog();
+            }
+            else
+            {
+                trioControllerConnectionWindow.Focus(); // 如果窗口已打开，则将其置于前台
+            }
+        }
+
+        private void BigTechControllerConnection_Click(object sender, RoutedEventArgs e)
+        {
+            if (bigTechControllerConnectionWindow == null || !bigTechControllerConnectionWindow.IsVisible)
+            {
+                bigTechControllerConnectionWindow = new BigTechControllerConnection(stepperMotorControl);
+
+
+                // 窗口关闭后清理资源
+                bigTechControllerConnectionWindow.Closed += (s, args) =>
+                {
+                    bigTechControllerConnectionWindow = null;
+                    Debug.Print("bigTechControllerConnection window closed.");
+                };
+
+                bigTechControllerConnectionWindow.ShowDialog();
+            }
+            else
+            {
+                bigTechControllerConnectionWindow.Focus(); // 如果窗口已打开，则将其置于前台
+            }
+
+        }
+
+        // Update the UI with the current status
+        private void UpdateStatusDisplay(string status)
+        {
+            AxisStatus.Text = status;
+
+        }
+
+        private void AxisConfiguration_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

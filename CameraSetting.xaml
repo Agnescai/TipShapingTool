@@ -1,0 +1,109 @@
+﻿<Window x:Class="TipShaping.CameraSetting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TipShaping"
+        mc:Ignorable="d"
+        Title="CameraSetting" 
+        WindowStartupLocation="Manual"> 
+    <Grid x:Name="WholeGrid"  Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Row="0"  VerticalAlignment="Center" Height="20" Background="Transparent" HorizontalAlignment="Stretch" >
+            <MenuItem Header="Open">
+                <MenuItem x:Name="OpenCAM1" Header="CAM1" Click="OpenCAM1_Click"/>
+                <MenuItem x:Name="OpenCAM2" Header="CAM2" Click="OpenCAM2_Click"/>
+                <MenuItem x:Name="OpenCAM3" Header="CAM3" Click="OpenCAM3_Click"/>
+                <MenuItem x:Name="OpenCAM4" Header="CAM4" Click="OpenCAM4_Click"/>
+                <MenuItem x:Name="OpenAllCAM" Header="All" Click="OpenAllCAM_Click"/>
+            </MenuItem>
+            <MenuItem Header="Close">
+                <MenuItem x:Name="CloseCAM1" Header="CAM1" Click="CloseCAM1_Click"/>
+                <MenuItem x:Name="CloseCAM2" Header="CAM2" Click="CloseCAM2_Click"/>
+                <MenuItem x:Name="CloseCAM3" Header="CAM3" Click="CloseCAM3_Click"/>
+                <MenuItem x:Name="CloseCAM4" Header="CAM4" Click="CloseCAM4_Click"/>
+                <MenuItem x:Name="CloseALLCAM" Header="All" Click="CloseAllCAM_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="ViewCrossHair" Header="Show Crosshairs" Click="ViewCrossHair_Click"/>
+            <MenuItem Header="Lights">
+                <MenuItem x:Name="CAM1Lights" Header="CAM1" Click="CAM1Lights_Click"/>
+                <MenuItem x:Name="CAM2Lights" Header="CAM2" Click="CAM2Lights_Click"/>
+                <MenuItem x:Name="CAM3Lights" Header="CAM3" Click="CAM3Lights_Click"/>
+                <MenuItem x:Name="CAM4Lights" Header="CAM4" Click="CAM4Lights_Click"/>
+                <MenuItem x:Name="AllLights" Header="All" Click="AllLights_Click"/>
+            </MenuItem>
+            <MenuItem Header="Save Image">
+                <MenuItem x:Name="SaveCAM1Image" Header="CAM1" Click="SaveCAM1Image_Click"/>
+                <MenuItem x:Name="SaveCAM2Image" Header="CAM2" Click="SaveCAM2Image_Click"/>
+                <MenuItem x:Name="SaveCAM3Image" Header="CAM3" Click="SaveCAM3Image_Click"/>
+                <MenuItem x:Name="SaveCAM4Image" Header="CAM4" Click="SaveCAM4Image_Click"/>
+                <MenuItem x:Name="SaveAllImages" Header="All" Click="SaveAllImages_Click"/>
+            </MenuItem>
+            <MenuItem Header="Setting">
+                <MenuItem x:Name="FPSSetting" Header="FPS" Click="FPSSetting_Click"/>
+            </MenuItem>
+         </Menu>
+
+        <Grid Grid.Row="1"   x:Name="CamGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- First Camera Stream -->
+            <Border  Grid.Column="0" BorderBrush="Black" BorderThickness="1" CornerRadius="2" Margin="0,0,0,0" Background="Transparent">
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" x:Name ="Camera1StreamFPS" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0 fps" VerticalAlignment="Center"  Visibility="Visible" FontWeight="Bold" FontSize="15"/>
+                    <local:CrosshairImage Grid.Row="1" x:Name="Camera1Stream" Stretch="Uniform" CrosshairVisibility="false"/>
+
+                </Grid>
+            </Border>
+
+            <GridSplitter  Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="4" Background="#FF737272"/>
+
+            <!-- Second Camera Stream -->
+            <Border Grid.Column="2"  BorderBrush="Black" BorderThickness="1" CornerRadius="2" Margin="0,0,0,0"  Background="Transparent">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" x:Name ="Camera2StreamFPS" HorizontalAlignment="Left" Margin="0,0,0,0" TextWrapping="Wrap" Text="0 fps" VerticalAlignment="Top"  Visibility="Visible" FontWeight="Bold" FontSize="15"/>
+                    <local:CrosshairImage Grid.Row="1" x:Name="Camera2Stream" Stretch="Uniform" CrosshairVisibility="false"/>
+                </Grid>
+            </Border>
+
+            <GridSplitter  Grid.Column="3" ResizeBehavior="PreviousAndNext" Width="4" Background="#FF737272"/>
+
+            <!-- Third Camera Stream -->
+            <Border Grid.Column="4"  BorderBrush="Black" BorderThickness="1" CornerRadius="2" Margin="0,0,0,0"  Background="Transparent">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" x:Name ="Camera3StreamFPS" HorizontalAlignment="Left" Margin="0,0,0,0" TextWrapping="Wrap" Text="0 fps" VerticalAlignment="Top"  Visibility="Visible" FontWeight="Bold" FontSize="15"/>
+                    <local:CrosshairImage Grid.Row="1" x:Name="Camera3Stream" Stretch="Uniform" CrosshairVisibility="false"/>
+                </Grid>
+            </Border>
+
+
+        </Grid>
+    </Grid>
+
+</Window>

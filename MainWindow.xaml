@@ -5,106 +5,162 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TipShaping"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="TipShaping" Height="450" Width="800" 
+        WindowStartupLocation="Manual">
 
-    <Grid Margin="0,0,0,7">
-        <StackPanel   VerticalAlignment="Top" Orientation="Horizontal" Margin="24,10,0,0">
-            <RadioButton Content="" VerticalAlignment="Center"/>
-            <TextBlock x:Name="PortTextBlock"  VerticalAlignment="Center" TextWrapping="Wrap" Text="Port:"  />
-            <ComboBox x:Name="PortComboBox"    IsDropDownOpen="False" AllowDrop="True"  VerticalContentAlignment="Center" Width="117">/></ComboBox>
-            <TextBlock x:Name="BaudRateTextBlock"   TextWrapping="Wrap" Text="Baud Rate:" VerticalAlignment="Center" />
-            <ComboBox Name="BaudRateComboBox"  Width="120" IsDropDownOpen="False" AllowDrop="True" VerticalContentAlignment="Center"></ComboBox>
-            <Button x:Name="ConnectButton" Content="Connect"    Click="ConnectButton_Click"  VerticalContentAlignment="Center"/>
-        </StackPanel>
+    <!--<Viewbox Stretch="Uniform">-->
+
+        <Grid x:Name="WholeGrid"  Margin="0,0,0,0">
+           
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+               <RowDefinition Height="Auto"/>
+               <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" VerticalAlignment="Center" Height="Auto" Background="#FFF0F0F0" >
+
+                <MenuItem Header="File" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <MenuItem x:Name="OpenFile" Header="Open" Click="OpenFile_Click"/>
+                    <MenuItem x:Name="ExportFile" Header="Export" Click="ExportFile_Click"/>
+                </MenuItem>
+
+                <MenuItem x:Name="AxisConfiguration" Header="AxisConfiguration" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <MenuItem x:Name="TrioControllerConnection" Header="Trio Controller Connection" Click="TrioControllerConnection_Click"/>
+                    <MenuItem x:Name="BigTechControllerConnection" Header="BigTech Controller Connection" Click="BigTechControllerConnection_Click"/>
+                </MenuItem>
+
+                <MenuItem x:Name="CameraSetting" Header="CameraSetting" HorizontalAlignment="Center" Click="CameraSetting_Click"/>
+            </Menu>
+        <ProgressBar Grid.Row="1" x:Name ="ProgressBar" VerticalContentAlignment="Top"  HorizontalAlignment="Stretch" Margin=" 0,0,0,0"/>
+        <!--<Separator Grid.Row="1" Margin="0,5,0,5" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Height="2"/>-->
+
+        <Grid Grid.Row="2" x:Name="MPosGrid" Margin="5,0,5,0"  >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="XMPosIndex" Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="X" TextAlignment="Center"  />
+                <TextBlock x:Name="YMPosIndex" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="Y" TextAlignment="Center" Margin="5,0" />
+                <TextBlock x:Name="ZMPosIndex" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="Z" TextAlignment="Center" Margin="5,0" />
+                <TextBlock x:Name="SAMPosIndex" Grid.Row="0" Grid.Column="3" TextWrapping="Wrap" Text="SA" TextAlignment="Center" Margin="5,0"/>
+                <TextBlock x:Name="SFMPosIndex" Grid.Row="0" Grid.Column="4" TextWrapping="Wrap" Text="SF" TextAlignment="Center" Margin="5,0"/>
+                <TextBlock x:Name="LMPosIndex" Grid.Row="0" Grid.Column="5" TextWrapping="Wrap" Text="L" TextAlignment="Center" Margin="5,0"/>
+                <TextBlock x:Name="AxisStatusTextBlock" Grid.Row="0" Grid.Column="6" TextWrapping="Wrap" Text="Axis status" TextAlignment="Center" Margin="5,0"/>
+
+                <TextBox x:Name="XMPosTextBox" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" TextAlignment="Center" />
+                <TextBox x:Name="YMPosTextBox" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Center" Margin="5,0"/>
+                <TextBox x:Name="ZMPosTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" TextAlignment="Center" Margin="5,0"/>
+                <TextBox x:Name="SAMPosTextBox" Grid.Row="1" Grid.Column="3" TextWrapping="Wrap" TextAlignment="Center" Margin="5,0"/>
+                <TextBox x:Name="SFMPosTextBox" Grid.Row="1" Grid.Column="4" TextWrapping="Wrap" TextAlignment="Center" Margin="5,0"/>
+                <TextBox x:Name="LMPosTextBox" Grid.Row="1" Grid.Column="5" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,0"/>
+                <TextBox x:Name="AxisStatus"  Grid.Row="1" Grid.Column="6" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,0"/>
+
+                <Button x:Name="EnableZButton" Content="Enable Z" Grid.Row="2" Grid.Column="0" Click="EnableZButton_Click" Margin="0,10"/>
+                <Button x:Name="EnableYButton" Content="Enable Y" Grid.Row="2" Grid.Column="1" Click="EnableYButton_Click" Margin="5,10"/>
+                <Button x:Name="EnableXButton" Content="Enable X" Grid.Row="2" Grid.Column="2" Click="EnableXButton_Click" Margin="5,10"/>
+                <Button x:Name="EnableSAButton" Content="Enable SA" Grid.Row="2" Grid.Column="3" VerticalAlignment="Top" Click="EnableSAButton_Click" Margin="5,10"/>
+                <Button x:Name="EnableSFButton" Content="Enable SF" Grid.Row="2" Grid.Column="4" VerticalAlignment="Top" Click="EnableSFButton_Click" Margin="5,10"/>
+                <Button x:Name="EnableLButton" Content="Enable L" Grid.Row="2" Grid.Column="5" VerticalAlignment="Top" Click="EnableLButton_Click" Margin="5,10"/>
+
+                <Button x:Name="HomeXButton" Content="Home X" Grid.Row="3" Grid.Column="0" Click="HomeXButton_Click" Margin="0,5"/>
+                <Button x:Name="HomeYButton" Content="Home Y" Grid.Row="3" Grid.Column="1" Click="HomeYButton_Click" Margin="5,5"/>
+                <Button x:Name="HomeZButton" Content="Home Z" Grid.Row="3" Grid.Column="2" Click="HomeZButton_Click" Margin="5,5"/>
+                <Button x:Name="HomeSAButton" Content="Home SA" Grid.Row="3" Grid.Column="3" Click="HomeSAButton_Click" Margin="5,5"/>
+                <Button x:Name="HomeSFButton" Content="Home SF" Grid.Row="3" Grid.Column="4" Click="HomeSFButton_Click" Margin="5,5"/>
+                <Button x:Name="HomeLButton" Content="Home L" Grid.Row="3" Grid.Column="5" Click="HomeLButton_Click" Margin="5,5"/>
+            </Grid>
+
+        <StackPanel  Grid.Row="3"  VerticalAlignment="Center" Orientation="Horizontal"  Height="38" Margin="5,0,5,0" >
+
+                <TextBlock x:Name="AxisGroupTextBlock"  TextWrapping="Wrap" Text="Axis Group:" VerticalAlignment="Center" Height="20" />
+                <ComboBox Name="AxisSelection" Width="120" IsDropDownOpen="False" AllowDrop="True" Height="25" 
+                                 VerticalContentAlignment="Center"
+                                 HorizontalContentAlignment="Center" 
+                                 SelectionChanged="AxisSelection_SelectionChanged"
+                                  Margin="5,0,0,0">
+                    <ComboBoxItem Content="XY" />
+                    <ComboBoxItem Content="Z" />
+                    <ComboBoxItem Content="SA" />
+                    <ComboBoxItem Content="SF" />
+                    <ComboBoxItem Content="L" />
+                </ComboBox>
+
+            <TextBlock x:Name="MotionTypeTextBlock" TextWrapping="Wrap" Margin="20,0,0,0" Text="Motion Type:" VerticalAlignment="Center" Height="20" />
+
+                <ComboBox Name="MoveTypeSelection" Width="120" Height="25" 
+                              VerticalContentAlignment="Center"
+                              HorizontalContentAlignment="Center" 
+                              SelectionChanged="MoveTypeSelection_SelectionChanged"
+                                  Margin="5,0,0,0">
+                    <ComboBoxItem Content="Relative Move" />
+                    <ComboBoxItem Content="Absolute Move" />
+                    <ComboBoxItem Content="Jog" />
+                </ComboBox>
+
+                <!-- Velocity Input -->
+                <TextBlock x:Name="VelocityTextBlock" Text="Velocity(mm/s):" VerticalAlignment="Center" Height="20" Margin="20,0,0,0"/>
+                <TextBox x:Name="VelocityInput" TextWrapping="Wrap" VerticalAlignment="Center" Width="55"  Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,0,0" />
+
+            </StackPanel>
+
+        <StackPanel   Grid.Row="4"  VerticalAlignment="Center" Orientation="Horizontal"  Height="54"  Margin="5,0,5,0">
+
+                <!-- Distance Input -->
+                <!--<Button x:Name="ForwardButton" Content="Forward" VerticalAlignment="Center" Height="20"  IsEnabled="True" PreviewMouseDown="ForwardButton_PreviewMouseDown" PreviewMouseUp="ForwardButton_PreviewMouseUp" Margin="150,0,0,0" Width="60">
+                    <Image Source="pack://application:,,,/Images/Larrow.png"/>
+                </Button>-->
+
+            <Button x:Name="ForwardButton" VerticalAlignment="Center" Height="35" Width="60"  Background="Transparent" BorderBrush="Transparent" 
+                    PreviewMouseDown="ForwardButton_PreviewMouseDown" 
+                    PreviewMouseUp="ForwardButton_PreviewMouseUp" 
+                    Margin="150,0,0,0" > 
+               
+                    <Image Source="pack://application:,,,/Images/LArrow.png" Height="30" Width="60" Stretch="Uniform"/>
+             </Button>
+            
+            <TextBox x:Name="DistanceInput" VerticalAlignment="Center" TextWrapping="Wrap" Width="54"  Height="20" HorizontalContentAlignment="Center" Margin="20,0,0,0" />
+            <TextBlock x:Name="DistanceUnit" VerticalAlignment="Center" TextWrapping="Wrap" Text="mm" Height="20" Margin="5,0,0,0"/>
+            <Button x:Name="ReverseButton"  VerticalAlignment="Center" Height="35" Width="60"  Background="Transparent" BorderBrush="Transparent" 
+                    PreviewMouseDown="ReverseButton_PreviewMouseDown" PreviewMouseUp="ReverseButton_PreviewMouseUp" Margin="20,0,0,0" >
+                <Image Source="pack://application:,,,/Images/RArrow.png" Height="30" Width="60" Stretch="Uniform"/>
+            </Button>
+            <Button x:Name="StopAllMotion" Content="Stop All Motion" VerticalAlignment="Center" Height="46" Width="123" Background="Red" FontWeight="Bold" Click="StopAllMotion_Click" Margin="20,0,0,0"/>
+            </StackPanel>
+
+            <UniformGrid Grid.Row="5"  Rows="1"  x:Name="RotationButtonsPanel" Height="20"  Visibility="Collapsed" >
+                <Button  x:Name="Rotation1" Content="30" Width="25" Height="20" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation2" Content="60" Width="25" Height="20" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation3" Content="90" Width="25" Height="20" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation4" Content="120" Width="25" Height="20" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation5" Content="150" Height="20" Width="25" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation6" Content="180" Height="20" Width="25" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation7" Content="210" Height="20" Width="25" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation8" Content="240" Height="20" Width="25" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation9" Content="270" Height="20" Width="25" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation10" Content="300" Height="20" Width="25" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation11" Content="330" Height="20" Width="25" Click="RotationButton_Click"/>
+                <Button  x:Name="Rotation12" Content="360" Width="25" Height="20" Click="RotationButton_Click"/>
+            </UniformGrid>
+        </Grid>
 
 
-        <ComboBox Name="AxisSelection" HorizontalAlignment="Left" Margin="108,159,0,0" VerticalAlignment="Top" Width="120" IsDropDownOpen="False" AllowDrop="True" Height="25" 
-                 VerticalContentAlignment="Center"
-                 HorizontalContentAlignment="Center" 
-                 SelectionChanged="AxisSelection_SelectionChanged">
-            <ComboBoxItem Content="XY" />
-            <ComboBoxItem Content="Z" />
-            <ComboBoxItem Content="SA" />
-            <ComboBoxItem Content="SF" />
-            <ComboBoxItem Content="L" />
-        </ComboBox>
-        <TextBlock x:Name="AxisGroupTextBlock" HorizontalAlignment="Left" Margin="30,163,0,0" TextWrapping="Wrap" Text="Axis Group:" VerticalAlignment="Top" Width="69"  Height="20" />
 
-        <ComboBox Name="MoveTypeSelection" HorizontalAlignment="Left" Margin="353,159,0,0" VerticalAlignment="Top" Width="120" Height="25" 
-                  VerticalContentAlignment="Center"
-                  HorizontalContentAlignment="Center" 
-                  SelectionChanged="MoveTypeSelection_SelectionChanged">
-            <ComboBoxItem Content="Relative Move" />
-            <ComboBoxItem Content="Absolute Move" />
-            <ComboBoxItem Content="Jog" />
-        </ComboBox>
-
-        <TextBlock x:Name="MotionTypeTextBlock" HorizontalAlignment="Left" Margin="258,163,0,0" TextWrapping="Wrap" Text="Motion Type:" VerticalAlignment="Top" Width="74"  Height="20"/>
-
-        <!-- Velocity Input -->
-        <TextBlock x:Name="VelocityTextBlock" HorizontalAlignment="Left" Margin="499,163,0,0" Text="Velocity(mm/s):" VerticalAlignment="Top" Height="20"/>
-        <TextBox x:Name="VelocityInput" HorizontalAlignment="Left" Margin="590,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="55"  Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-
-        <!-- Distance Input -->
-        <Button x:Name="ForwardButton" Content="Forward" HorizontalAlignment="Left" Margin="272,296,0,0" VerticalAlignment="Top" Height="20" Width="60" IsEnabled="True" PreviewMouseDown="ForwardButton_PreviewMouseDown" PreviewMouseUp="ForwardButton_PreviewMouseUp" />
-        <Button x:Name="ReverseButton" Content="Reverse" HorizontalAlignment="Left" Margin="464,296,0,0" VerticalAlignment="Top" Height="20" Width="60" IsEnabled="True" PreviewMouseDown="ReverseButton_PreviewMouseDown" PreviewMouseUp="ReverseButton_PreviewMouseUp" />
-        <Button x:Name="EnableSAButton" Content="Enable SA" HorizontalAlignment="Left" Height="20" Margin="249,200,0,0" VerticalAlignment="Top" Width="64" Click="EnableSAButton_Click"/>
-        <Button x:Name="EnableSFButton" Content="Enable SF" HorizontalAlignment="Left" Height="20" Margin="321,200,0,0" VerticalAlignment="Top" Width="64" Click="EnableSFButton_Click"/>
-        <Button x:Name="EnableLButton" Content="Enable L" HorizontalAlignment="Left" Height="20" Margin="392,200,0,0" VerticalAlignment="Top" Width="64" Click="EnableLButton_Click"/>
-        <TextBlock x:Name="DistanceUnit" HorizontalAlignment="Left" Margin="428,296,0,0" TextWrapping="Wrap" Text="mm" VerticalAlignment="Top" Height="20"/>
-        <Button x:Name="EnableZButton" Content="Enable Z" HorizontalAlignment="Left" Height="20" Margin="176,200,0,0" VerticalAlignment="Top" Width="64" Click="EnableZButton_Click"/>
-        <Button x:Name="EnableYButton" Content="Enable Y" HorizontalAlignment="Left" Height="20" Margin="102,200,0,0" VerticalAlignment="Top" Width="64" Click="EnableYButton_Click"/>
-        <Button x:Name="EnableXButton" Content="Enable X" HorizontalAlignment="Left" Height="20" Margin="30,200,0,0" VerticalAlignment="Top" Width="64" Click="EnableXButton_Click"/>
-        <TextBox x:Name="DistanceInput" HorizontalAlignment="Center" Margin="0,296,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="54"  Height="20" HorizontalContentAlignment="Center" />
-        <TextBlock x:Name="XMPosIndex" HorizontalAlignment="Left" Margin="44,99,0,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top" Width="31" Height="16"  TextAlignment="Center" />
-        <TextBlock x:Name="YMPosIndex" HorizontalAlignment="Left" Margin="114,99,0,0" TextWrapping="Wrap" Text="Y" VerticalAlignment="Top" Width="31" Height="16"  TextAlignment="Center" />
-        <TextBlock x:Name="ZMPosIndex" HorizontalAlignment="Left" Margin="185,99,0,0" TextWrapping="Wrap" Text="Z" VerticalAlignment="Top" Width="31" Height="16"  TextAlignment="Center" />
-        <TextBlock x:Name="SAMPosIndex" HorizontalAlignment="Left" Margin="255,99,0,0" TextWrapping="Wrap" Text="SA" VerticalAlignment="Top" Width="31" Height="16"  TextAlignment="Center" />
-        <TextBlock x:Name="SFMPosIndex" HorizontalAlignment="Left" Margin="325,99,0,0" TextWrapping="Wrap" Text="SF" VerticalAlignment="Top" Width="31" Height="16"  TextAlignment="Center" />
-        <TextBlock x:Name="LMPosIndex" HorizontalAlignment="Left" Margin="394,99,0,0" TextWrapping="Wrap" Text="L" VerticalAlignment="Top" Width="30" Height="16"  TextAlignment="Center" />
-        <TextBox x:Name="XMPosTextBox" HorizontalAlignment="Left" Margin="30,124,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="60" Height="16"  TextAlignment="Center" />
-        <TextBox x:Name="YMPosTextBox" HorizontalAlignment="Left" Margin="100,124,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="60" Height="16"  TextAlignment="Center" />
-        <TextBox x:Name="ZMPosTextBox" HorizontalAlignment="Left" Margin="171,124,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="16"  TextAlignment="Center" />
-        <TextBox x:Name="SAMPosTextBox" HorizontalAlignment="Left" Margin="243,124,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="60" Height="16"  TextAlignment="Center" />
-        <TextBox x:Name="SFMPosTextBox" HorizontalAlignment="Left" Margin="313,124,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="60" Height="16"  TextAlignment="Center" />
-        <TextBox x:Name="LMPosTextBox" HorizontalAlignment="Left" Margin="382,124,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="60" Height="16"  TextAlignment="Center" />
-        <Button x:Name="HomeSAButton" Content="Home SA" HorizontalAlignment="Left" Height="20" Margin="249,226,0,0" VerticalAlignment="Top" Width="64" Click="HomeSAButton_Click"/>
-        <Button x:Name="HomeSFButton" Content="Home SF" HorizontalAlignment="Left" Height="20" Margin="321,226,0,0" VerticalAlignment="Top" Width="64" Click="HomeSFButton_Click"/>
-        <Button x:Name="HomeLButton" Content="Home L" HorizontalAlignment="Left" Height="20" Margin="392,226,0,0" VerticalAlignment="Top" Width="64" Click="HomeLButton_Click"/>
-        <Button x:Name="HomeZButton" Content="Home Z" HorizontalAlignment="Left" Height="20" Margin="176,226,0,0" VerticalAlignment="Top" Width="64" Click="HomeZButton_Click"/>
-        <Button x:Name="HomeYButton" Content="Home Y" HorizontalAlignment="Left" Height="20" Margin="102,226,0,0" VerticalAlignment="Top" Width="64" Click="HomeYButton_Click"/>
-        <Button x:Name="HomeXButton" Content="Home X" HorizontalAlignment="Left" Height="20" Margin="30,226,0,0" VerticalAlignment="Top" Width="64" Click="HomeXButton_Click"/>
-        <Button x:Name="SendButton" Content="Send" HorizontalAlignment="Left" Margin="380,61,0,0" VerticalAlignment="Top" Click="SendButton_Click" Width="64" Height="20" VerticalContentAlignment="Center"/>
-        <TextBlock x:Name="CommandTextBlock" HorizontalAlignment="Left" Margin="24,61,0,0" TextWrapping="Wrap" Text="Command:" VerticalAlignment="Top" Width="64" Height="20" TextAlignment="Center" />
-        <TextBox x:Name="CommandInput" HorizontalAlignment="Left" Margin="100,61,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="255"  Height="20" HorizontalContentAlignment="Center" />
-        <TextBox x:Name="AxisStatus" HorizontalAlignment="Left" Margin="646,116,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" TextAlignment="Center" Width="78"/>
-        <TextBlock x:Name="AxisStatusTextBlock" HorizontalAlignment="Left" Margin="567,116,0,0" TextWrapping="Wrap" Text="Axis status:" VerticalAlignment="Top" Width="68" Height="16"  TextAlignment="Center" />
-        <Button x:Name="StopAllMotion" Content="Stop All Motion" HorizontalAlignment="Left" Margin="549,200,0,0" VerticalAlignment="Top" Height="46" Width="123" Background="Red" FontWeight="Bold" Click="StopAllMotion_Click"/>
-
-        <UniformGrid Rows="1" Margin="179,335,179,44" x:Name="RotationButtonsPanel" Visibility="Collapsed">
-
-            <Button  x:Name="Rotation1" Content="30" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="25" Height="20" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation2" Content="60" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="25" Height="20" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation3" Content="90" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="25" Height="20" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation4" Content="120" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="25" Height="20" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation5" Content="150" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation6" Content="180" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation7" Content="210" HorizontalAlignment="Left" VerticalAlignment="Center" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation8" Content="240" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation9" Content="270" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation10" Content="300" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation11" Content="330" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation12" Content="360" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="25" Height="20" Click="RotationButton_Click"/>
-
-        </UniformGrid>
-
-
-
-
-
-
-
-
-    </Grid>
+    <!--</Viewbox>-->
 
 </Window>

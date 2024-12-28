@@ -1,0 +1,25 @@
+﻿<Window x:Class="TipShaping.TrioControllerConnection"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TipShaping"
+        mc:Ignorable="d"
+        Title="TrioControllerConnection" Height="60" Width="320"
+        WindowStartupLocation="Manual">
+    
+    <Grid Height="40" Width="320" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+
+        <StackPanel Grid.Row="0"  VerticalAlignment="Center" Orientation="Horizontal">
+            <TextBlock  x:Name="IPAddressTextBlock"  Text="Controller IP:" Width="70" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBox x:Name="IPAddress"   TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Center" Width="120" Margin="5,0,0,0"/>
+            <Button  x:Name="ConnectControllerButton"  Content="Connect"  Width="70"   VerticalAlignment="Center" Margin="20,0,0,0" Click="ConnectControllerButton_Click"/>
+        </StackPanel>
+        
+
+    </Grid>
+</Window>

@@ -8,8 +8,10 @@
     ".NETCoreApp,Version=v7.0": {
       "TipShaping/1.0.0": {
         "dependencies": {
+          "System.Drawing.Common": "9.0.0",
           "System.IO.Ports": "8.0.0",
-          "System.Management": "9.0.0"
+          "System.Management": "9.0.0",
+          "Basler.Pylon": "1.2.0.0"
         },
         "runtime": {
           "TipShaping.dll": {}
@@ -77,6 +79,14 @@
           }
         }
       },
+      "System.Drawing.Common/9.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52901"
+          }
+        }
+      },
       "System.IO.Ports/8.0.0": {
         "dependencies": {
           "runtime.native.System.IO.Ports": "8.0.0"
@@ -110,6 +120,14 @@
           "lib/netstandard2.0/System.Management.dll": {
             "assemblyVersion": "4.0.0.0",
             "fileVersion": "9.0.24.52809"
+          }
+        }
+      },
+      "Basler.Pylon/1.2.0.0": {
+        "runtime": {
+          "Basler.Pylon.dll": {
+            "assemblyVersion": "1.2.0.0",
+            "fileVersion": "7.2.1.19268"
           }
         }
       }
@@ -170,6 +188,13 @@
       "path": "system.codedom/9.0.0",
       "hashPath": "system.codedom.9.0.0.nupkg.sha512"
     },
+    "System.Drawing.Common/9.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-uoozjI3+dlgKh2onFJcz8aNLh6TRCPlLSh8Dbuljc8CdvqXrxHOVysJlrHvlsOCqceqGBR1wrMPxlnzzhynktw==",
+      "path": "system.drawing.common/9.0.0",
+      "hashPath": "system.drawing.common.9.0.0.nupkg.sha512"
+    },
     "System.IO.Ports/8.0.0": {
       "type": "package",
       "serviceable": true,
@@ -183,6 +208,11 @@
       "sha512": "sha512-bVh4xAMI5grY5GZoklKcMBLirhC8Lqzp63Ft3zXJacwGAlLyFdF4k0qz4pnKIlO6HyL2Z4zqmHm9UkzEo6FFsA==",
       "path": "system.management/9.0.0",
       "hashPath": "system.management.9.0.0.nupkg.sha512"
+    },
+    "Basler.Pylon/1.2.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }
