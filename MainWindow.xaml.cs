@@ -41,8 +41,8 @@ namespace TipShaping
         private CameraSetting cameraSettingWindow;
         private BigTechControllerConnection bigTechControllerConnectionWindow;
         private TrioControllerConnection trioControllerConnectionWindow;
-        
         private StepperMotorControl stepperMotorControl;
+        private TrioMotionControl trioMotionControl;
 
         public MainWindow()
         {
@@ -56,17 +56,20 @@ namespace TipShaping
             InitializeComponent();
             stepperMotorControl = new StepperMotorControl();
 
+
             stepperMotorControl.PositionUpdated += StepperMotorOnPositionUpdated;
             stepperMotorControl.MovingStatusUpdated += StepperMotorOnMovingStatusUpdated;
+
+            trioMotionControl = new TrioMotionControl();
 
         }
 
         private void StepperMotorOnPositionUpdated(float x, float y, float z)
         {
             // Update the UI
-            SAMPosTextBox.Text = $"X: {x}";
-            SFMPosTextBox.Text = $"Y: {y}";
-            LMPosTextBox.Text = $"Z: {z}";
+            SAMPosTextBox.Text = $"{x:F3}";
+            SFMPosTextBox.Text = $"{y:F3}";
+            LMPosTextBox.Text = $"{z:F3}";
         }
         private void StepperMotorOnMovingStatusUpdated(bool Moving)
         {
@@ -667,7 +670,7 @@ namespace TipShaping
         {
             if (trioControllerConnectionWindow == null || !trioControllerConnectionWindow.IsVisible)
             {
-                trioControllerConnectionWindow = new TrioControllerConnection();
+                trioControllerConnectionWindow = new TrioControllerConnection(trioMotionControl);
 
 
                 // 窗口关闭后清理资源
@@ -692,7 +695,7 @@ namespace TipShaping
                 bigTechControllerConnectionWindow = new BigTechControllerConnection(stepperMotorControl);
 
 
-                // 窗口关闭后清理资源
+               
                 bigTechControllerConnectionWindow.Closed += (s, args) =>
                 {
                     bigTechControllerConnectionWindow = null;
@@ -718,6 +721,15 @@ namespace TipShaping
         private void AxisConfiguration_Click(object sender, RoutedEventArgs e)
         {
             
+        }
+
+
+
+        private void ShowVR15button_Click(object sender, RoutedEventArgs e)
+        {
+            Double VRValue = 0;
+            trioMotionControl.GetVr(15, out VRValue);
+            VR15TextBox.Text = VRValue.ToString();
         }
     }
 }

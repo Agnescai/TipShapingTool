@@ -3,10 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="SavedCamerasSN" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">21815618,21806663,21862541</Value>
     </Setting>
     <Setting Name="CameraOrientation" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">BCAM,SCAM1,SCAM2</Value>
+    </Setting>
+    <Setting Name="SerialPortName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM7</Value>
+    </Setting>
+    <Setting Name="SerialPortStatus" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

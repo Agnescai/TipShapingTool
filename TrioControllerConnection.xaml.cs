@@ -23,10 +23,12 @@ namespace TipShaping
     {
         TrioMotionControl trioMotionControl;
 
-        public TrioControllerConnection()
+        public TrioControllerConnection(TrioMotionControl trioMotion)
         {
             trioMotionControl = new TrioMotionControl();
             InitializeComponent();
+
+            trioMotionControl = trioMotion;
 
         }
 

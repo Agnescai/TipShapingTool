@@ -5,13 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using TrioMotion.TrioPC_NET;
 
-
+      
 namespace TipShaping
 {
    
 
     public class TrioMotionControl : TrioPC
     {
+        public TrioMotionControl() 
+        { 
+        }
+
         internal void tripleVRs(int startingIndex, int number)
         {
             double temp;

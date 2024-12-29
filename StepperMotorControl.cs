@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.IO.Ports;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Threading;
@@ -29,15 +28,16 @@ namespace TipShaping
         public event MovingStatusUpdateHandler MovingStatusUpdated;
 
 
-        public StepperMotorControl()
-        {
-
-            serialPort.DataReceived += SerialPort_DataReceived;
-        }
-        public void OpenSerialPort(string selectedPort, int baudRate)
+        public StepperMotorControl( )
         {
             serialPort.DtrEnable = true;
             serialPort.RtsEnable = true;
+
+            serialPort.DataReceived += SerialPort_DataReceived;
+
+        }
+        public void OpenSerialPort(string selectedPort, int baudRate)
+        {
             serialPort.PortName = selectedPort;
             serialPort.BaudRate = baudRate;
             serialPort.Open();
@@ -113,7 +113,8 @@ namespace TipShaping
             Match match = regex.Match(input);
             if (match.Success)
             {
-                return float.Parse(match.Groups[1].Value);
+                float value = float.Parse(match.Groups[1].Value);
+                return (float)Math.Round(value, 3);  // Rounds to 3 decimal places
             }
             else
             {

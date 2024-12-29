@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TipShaping"
         mc:Ignorable="d"
-        Title="BigTechControllerConnection" Height="120" Width="500">
+        Title="BigTechControllerConnection" Height="120" Width="500"
+         Closing="BigTechControllerConnection_Closing" Loaded="BigTechControllerConnection_Loaded">
     <Grid>
         <StackPanel   VerticalAlignment="Top" Orientation="Horizontal" Margin="5,10,5,0" Height="20" >
             <RadioButton Content="" VerticalAlignment="Center" Margin="0,0" />
