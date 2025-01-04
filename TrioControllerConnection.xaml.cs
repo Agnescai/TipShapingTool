@@ -48,9 +48,9 @@ namespace TipShaping
                         trioMotionControl.ConnectToController(IPAddress.Text);
                         Debug.Print("Connected to Trio Controller");
                         ConnectControllerButton.Content = "Disconnect";
-                        //trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,0,1);
-                        //trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,1,1);
-                        //trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,2,1);
+                        trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,0,1);
+                        trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,1,1);
+                        trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,2,1);
                         trioMotionControl.Run("STARTUP", -1);//-1 means the next available process
                         Debug.Print("Drive enabled");
                     }
