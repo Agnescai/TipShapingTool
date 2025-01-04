@@ -336,11 +336,16 @@ namespace TipShaping
                 var distance = DistanceInput.Text;
                 var moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
                 var axisName = (AxisSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+                int axisIndex = -1;
                 if (axisName =="XY")
                 {
                     axisName = "X"; //this button is for X
+                    axisIndex = GetAxisIndex(axisName);
+                    trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, axisIndex, out isAxisEnabledD[axisIndex]);
+                    isAxisEnabled[axisIndex] = (isAxisEnabledD[axisIndex] == 1);
                 }
-                int axisIndex = GetAxisIndex(axisName);
+
+                axisIndex = GetAxisIndex(axisName);//save for other axis
                 if (axisIndex == -1)
                 {
                     MessageBox.Show("Invalid axis selected.");
@@ -375,64 +380,54 @@ namespace TipShaping
 
                 if (axisName == "X")// trio
                 {
-                    trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, axisIndex, out isAxisEnabledD[axisIndex]);
-                    isAxisEnabled[axisIndex] = (isAxisEnabledD[axisIndex] == 1);
+   
+                    double distanceValue = double.Parse(distance);
+                    // Prepare parameters for the MoveRel function
+                    double[] distances = new double[1] { distanceValue }; // Distance array for relative move
+                    int baseAxis = axisIndex;                            // Base axis for movement
+                    double velocityValue = double.Parse(velocity);
+                    trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
 
-                    if (isAxisEnabled[axisIndex])
+                    if (moveType == "Jog")
                     {
-                        double distanceValue = double.Parse(distance);
-                        // Prepare parameters for the MoveRel function
-                        double[] distances = new double[1] { distanceValue }; // Distance array for relative move
-                        int baseAxis = axisIndex;                            // Base axis for movement
-                        double velocityValue = double.Parse(velocity);
-                        trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
+                        //trioMotionControl.Base();
+                        bool JogSuccessful = trioMotionControl.Forward(baseAxis);
+                        if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
+                        else { Debug.Print("JogSuccessful: 0"); }
+                    }
 
-                        if (moveType == "Jog")
+                    if (moveType == "Relative Move")
+                    {
+
+                        // Call MoveRel
+                        bool success = trioMotionControl.MoveRel(distances, baseAxis);
+
+                        if (success)
                         {
-                            //trioMotionControl.Base();
-                            bool JogSuccessful = trioMotionControl.Forward(baseAxis);
-                            if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
-                            else { Debug.Print("JogSuccessful: 0"); }
+                            Console.WriteLine("Relative move on X axis completed successfully.");
                         }
-
-                        if (moveType == "Relative Move")
+                        else
                         {
-
-                            // Call MoveRel
-                            bool success = trioMotionControl.MoveRel(distances, baseAxis);
-
-                            if (success)
-                            {
-                                Console.WriteLine("Relative move on X axis completed successfully.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Relative move on X axis failed.");
-                            }
-
-                        }
-
-                        if (moveType == "Absolute Move")
-                        {
-                            // Call MoveAbs
-                            bool success = trioMotionControl.MoveAbs(distances, baseAxis);
-
-                            if (success)
-                            {
-                                Console.WriteLine("Relative move on X axis completed successfully.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Relative move on X axis failed.");
-                            }
-
+                            Console.WriteLine("Relative move on X axis failed.");
                         }
 
                     }
-                    else { MessageBox.Show("Enable axis X first."); }
 
+                    if (moveType == "Absolute Move")
+                    {
+                        // Call MoveAbs
+                        bool success = trioMotionControl.MoveAbs(distances, baseAxis);
 
-                    
+                        if (success)
+                        {
+                            Console.WriteLine("Relative move on X axis completed successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Relative move on X axis failed.");
+                        }
+
+                    }
 
                 }
 
@@ -508,8 +503,18 @@ namespace TipShaping
                 var distance = DistanceInput.Text;
                 var moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
                 var axisName = (AxisSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+                int axisIndex = -1;
 
-                int axisIndex = GetAxisIndex(axisName);
+                if (axisName=="XY") 
+                { 
+                    axisName = "X";
+                    axisIndex = GetAxisIndex(axisName);
+                    trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, axisIndex, out isAxisEnabledD[axisIndex]);
+                    isAxisEnabled[axisIndex] = (isAxisEnabledD[axisIndex] == 1);
+
+                }
+
+                axisIndex = GetAxisIndex(axisName);
                 if (axisIndex == -1)
                 {
                     MessageBox.Show("Invalid axis selected.");
@@ -545,70 +550,61 @@ namespace TipShaping
 
                 if (axisName == "X")// trio
                 {
-                    trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, axisIndex, out isAxisEnabledD[axisIndex]);
-                    isAxisEnabled[axisIndex] = (isAxisEnabledD[axisIndex] == 1);
+                   
+                   
+                    double distanceValue = double.Parse(distance);
+                    // Prepare parameters for the MoveRel function
+                    double[] distances = new double[1] { distanceValue }; // Distance array for relative move
+                    int baseAxis = axisIndex;                            // Base axis for movement
+                    double velocityValue = double.Parse(velocity);
+                    trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
 
-                    if (isAxisEnabled[axisIndex])
+                    if (moveType == "Jog")
                     {
-                        double distanceValue = double.Parse(distance);
-                        // Prepare parameters for the MoveRel function
-                        double[] distances = new double[1] { distanceValue }; // Distance array for relative move
-                        int baseAxis = axisIndex;                            // Base axis for movement
-                        double velocityValue = double.Parse(velocity);
-                        trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
+                        //trioMotionControl.Base();
+                        bool JogSuccessful = trioMotionControl.Reverse(baseAxis);
+                        if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
+                        else { Debug.Print("JogSuccessful: 0"); }
+                    }
 
-                        if (moveType == "Jog")
+                    if (moveType == "Relative Move")
+                    {
+
+                        // Call MoveRel
+                        // Negate each element in the array
+                        for (int i = 0; i < distances.Length; i++)
                         {
-                            //trioMotionControl.Base();
-                            bool JogSuccessful = trioMotionControl.Reverse(baseAxis);
-                            if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
-                            else { Debug.Print("JogSuccessful: 0"); }
+                            distances[i] = -distances[i];
                         }
 
-                        if (moveType == "Relative Move")
+                        bool success = trioMotionControl.MoveRel(distances, baseAxis);
+
+                        if (success)
                         {
-
-                            // Call MoveRel
-                            // Negate each element in the array
-                            for (int i = 0; i < distances.Length; i++)
-                            {
-                                distances[i] = -distances[i];
-                            }
-
-                            bool success = trioMotionControl.MoveRel(distances, baseAxis);
-
-                            if (success)
-                            {
-                                Console.WriteLine("Relative move on X axis completed successfully.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Relative move on X axis failed.");
-                            }
-
+                            Console.WriteLine("Relative move on X axis completed successfully.");
                         }
-
-                        if (moveType == "Absolute Move")
+                        else
                         {
-                            // Call MoveAbs
-                            bool success = trioMotionControl.MoveAbs(distances, baseAxis);
-
-                            if (success)
-                            {
-                                Console.WriteLine("Relative move on X axis completed successfully.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Relative move on X axis failed.");
-                            }
-
+                            Console.WriteLine("Relative move on X axis failed.");
                         }
 
                     }
-                    else { MessageBox.Show("Enable axis X first."); }
 
+                    if (moveType == "Absolute Move")
+                    {
+                        // Call MoveAbs
+                        bool success = trioMotionControl.MoveAbs(distances, baseAxis);
 
+                        if (success)
+                        {
+                            Console.WriteLine("Relative move on X axis completed successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Relative move on X axis failed.");
+                        }
 
+                    }
 
                 }
 
@@ -1031,13 +1027,26 @@ namespace TipShaping
                 var distance = DistanceInput.Text;
                 var moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
                 var axisName = (AxisSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+                int axisIndex = -1;
 
-                int axisIndex = GetAxisIndex(axisName);
+                if (axisName == "XY")
+                {
+                    axisName = "Y"; //this button is for Y
+                }
+                axisIndex = GetAxisIndex(axisName);
                 if (axisIndex == -1)
                 {
                     MessageBox.Show("Invalid axis selected.");
                     return;
                 }
+
+                if (axisName == "Y" || axisName == "Z")
+                {
+
+                    trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, axisIndex, out isAxisEnabledD[axisIndex]);
+                    isAxisEnabled[axisIndex] = (isAxisEnabledD[axisIndex] == 1);
+                }
+
 
                 // Check if the axis is enabled
                 if (!isAxisEnabled[axisIndex])
@@ -1064,6 +1073,63 @@ namespace TipShaping
                     }
 
                 }
+
+                if (axisName == "Y" || axisName == "Z")// trio
+                {
+                   
+                    double distanceValue = double.Parse(distance);
+                    // Prepare parameters for the MoveRel function
+                    double[] distances = new double[1] { distanceValue }; // Distance array for relative move
+                    int baseAxis = axisIndex;                            // Base axis for movement
+                    double velocityValue = double.Parse(velocity);
+                    trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
+
+                    if (moveType == "Jog")
+                    {
+                        //trioMotionControl.Base();
+                        bool JogSuccessful = trioMotionControl.Forward(baseAxis);
+                        if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
+                        else { Debug.Print("JogSuccessful: 0"); }
+                    }
+
+                    if (moveType == "Relative Move")
+                    {
+
+                        // Call MoveRel
+                        bool success = trioMotionControl.MoveRel(distances, baseAxis);
+
+                        if (success)
+                        {
+                            Console.WriteLine("Relative move completed successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Relative move failed.");
+                        }
+
+                    }
+
+                    if (moveType == "Absolute Move")
+                    {
+                        // Call MoveAbs
+                        bool success = trioMotionControl.MoveAbs(distances, baseAxis);
+
+                        if (success)
+                        {
+                            Console.WriteLine("Relative move completed successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Relative move failed.");
+                        }
+
+                    }
+
+
+                }//if axis is Y or Z
+
+
+
 
 
 
@@ -1087,16 +1153,35 @@ namespace TipShaping
                 MessageBox.Show($"Error: {ex.Message}");
             }
 
+           
+
         }
 
         private void UpButton_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             var moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+            var axisName = (AxisSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+            if (axisName == "XY")
+            {
+                axisName = "Y"; //this button is for Y or Z
+            }
+            int axisIndex = GetAxisIndex(axisName);
+
 
             if (moveType == "Jog")
             {
                 // Stop jogging
-                stepperMotorControl.SendCommand("M410"); //  stop command
+                if (axisName == "X") //X axis
+                {
+
+                    trioMotionControl.Cancel(0, axisIndex);//.0 cancels the current move on the base axis, 1 cancels the buffered moves on the base axis.
+
+                }
+                else if (axisName == "L") //L axis
+                {
+                    stepperMotorControl.SendCommand("M410"); //  stop command
+                }
+
             }
         }
 
@@ -1109,11 +1194,25 @@ namespace TipShaping
                 var moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
                 var axisName = (AxisSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
 
-                int axisIndex = GetAxisIndex(axisName);
+                int axisIndex = -1;
+                if (axisName == "XY")
+                {
+                    axisName = "Y";
+                   
+                }
+                axisIndex = GetAxisIndex(axisName);
                 if (axisIndex == -1)
                 {
                     MessageBox.Show("Invalid axis selected.");
                     return;
+                }
+
+
+                if (axisName=="Y" || axisName=="Z")
+                {
+                    
+                    trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, axisIndex, out isAxisEnabledD[axisIndex]);
+                    isAxisEnabled[axisIndex] = (isAxisEnabledD[axisIndex] == 1);
                 }
 
                 // Check if the axis is enabled
@@ -1142,6 +1241,68 @@ namespace TipShaping
                     }
 
                 }
+
+                if (axisName == "Y" || axisName == "Z")// trio
+                {
+
+
+                    double distanceValue = double.Parse(distance);
+                    // Prepare parameters for the MoveRel function
+                    double[] distances = new double[1] { distanceValue }; // Distance array for relative move
+                    int baseAxis = axisIndex;                            // Base axis for movement
+                    double velocityValue = double.Parse(velocity);
+                    trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
+
+                    if (moveType == "Jog")
+                    {
+                        //trioMotionControl.Base();
+                        bool JogSuccessful = trioMotionControl.Reverse(baseAxis);
+                        if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
+                        else { Debug.Print("JogSuccessful: 0"); }
+                    }
+
+                    if (moveType == "Relative Move")
+                    {
+
+                        // Call MoveRel
+                        // Negate each element in the array
+                        for (int i = 0; i < distances.Length; i++)
+                        {
+                            distances[i] = -distances[i];
+                        }
+
+                        bool success = trioMotionControl.MoveRel(distances, baseAxis);
+
+                        if (success)
+                        {
+                            Console.WriteLine("Relative move  completed successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Relative move  failed.");
+                        }
+
+                    }
+
+                    if (moveType == "Absolute Move")
+                    {
+                        // Call MoveAbs
+                        bool success = trioMotionControl.MoveAbs(distances, baseAxis);
+
+                        if (success)
+                        {
+                            Console.WriteLine("Relative move completed successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Relative move failed.");
+                        }
+
+                    }
+
+                }
+
+
 
                 if (axisName == "SA" || axisName == "SF")
                 { //add code to check that 
@@ -1169,12 +1330,30 @@ namespace TipShaping
         private void DownButton_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             var moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+            var axisName = (AxisSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+            if (axisName == "XY")
+            {
+                axisName = "Y"; //this button is for Y
+            }
+            int axisIndex = GetAxisIndex(axisName);
 
             if (moveType == "Jog")
             {
                 // Stop jogging
-                stepperMotorControl.SendCommand("M410"); //  stop command
+                if (axisName == "Y") //Y axis
+                {
+
+                    trioMotionControl.Cancel(0, axisIndex);//.0 cancels the current move on the base axis, 1 cancels the buffered moves on the base axis.
+
+                }
+                else if (axisName == "L") //L axis
+                {
+                    stepperMotorControl.SendCommand("M410"); //  stop command
+                }
+
             }
+
+
         }
 
         private void UpLeftButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
