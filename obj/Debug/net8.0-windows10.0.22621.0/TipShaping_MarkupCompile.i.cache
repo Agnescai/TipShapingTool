@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\ying.cai\source\repos\TipShaping\obj\Debug\net8.0-windows10.0.22621.0\
+C:\Users\Trio\Source\Repos\TipShapingTool\obj\Debug\net8.0-windows10.0.22621.0\
 TipShaping
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-C:\Users\ying.cai\source\repos\TipShaping\App.xaml
+C:\Users\Trio\Source\Repos\TipShapingTool\App.xaml
 4-1741721085
 
 131322396864
-206-1660647663
+206-1147833134
 BigTechControllerConnection.xaml;CameraSetting.xaml;MainWindow.xaml;TrioControllerConnection.xaml;
 
-False
+True
 

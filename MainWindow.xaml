@@ -332,6 +332,7 @@
         <StackPanel Grid.Row="9" VerticalAlignment="Center" Orientation="Horizontal" Margin="5,0,5,0"  >
             <TextBox x:Name="VR15TextBox"  TextWrapping="Wrap"  Width="30"/>
             <Button x:Name="ShowVR11button" Content="Show VR15"  Margin="10,0,0,0" Click="ShowVR15button_Click" />
+            <Button x:Name="DisconnectTrioButton" Content="Disconnect Trio" Margin="10,0,0,0" Click="DisconnectTrioButton_Click"/>
         </StackPanel>
     </Grid>
 
