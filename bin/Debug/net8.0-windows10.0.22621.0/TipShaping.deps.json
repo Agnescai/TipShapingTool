@@ -172,7 +172,7 @@
         "runtime": {
           "Basler.Pylon.dll": {
             "assemblyVersion": "1.2.0.0",
-            "fileVersion": "8.1.0.279"
+            "fileVersion": "7.2.1.19268"
           }
         }
       },

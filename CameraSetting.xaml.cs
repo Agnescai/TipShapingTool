@@ -90,15 +90,17 @@ namespace TipShaping
             //this.Closed -= Cameras_Closed;
 
             // Cancel any ongoing background tasks before window closes
+
             await Task.Delay(500);
             cancellationTokenSource?.Cancel();
             SaveSettings();
             CloseCameras();
             fpstimer?.Stop();
             fpstimer?.Dispose();
+
             //fpstimer. -= FPSTimer_Tick;
-           
-           
+
+
 
 
         }
@@ -195,6 +197,8 @@ namespace TipShaping
                 if (newImage != null)
                 {
                     BitmapSource Bms = ConvertBitmapToBitmapSource(newImage);
+                    if (cancellationTokenSource?.Token.IsCancellationRequested ?? false)
+                        return;
                     Camera1Stream.Source = Bms;
                     newImage.Dispose();
                     fpsArray[0] = fpsArray[0] + 1;
@@ -229,6 +233,8 @@ namespace TipShaping
                 if (newImage != null)
                 {
                     BitmapSource Bms = ConvertBitmapToBitmapSource(newImage);
+                    if (cancellationTokenSource?.Token.IsCancellationRequested ?? false)
+                        return;
                     Camera2Stream.Source = Bms;
                     newImage.Dispose();
                     fpsArray[1] = fpsArray[1] + 1;
@@ -280,6 +286,8 @@ namespace TipShaping
                 if (newImage != null)
                 {
                     BitmapSource Bms = ConvertBitmapToBitmapSource(newImage);
+                    if (cancellationTokenSource?.Token.IsCancellationRequested ?? false)
+                        return;
                     Camera3Stream.Source = Bms;
                     newImage.Dispose();
                     fpsArray[2] = fpsArray[2] + 1;
@@ -474,6 +482,7 @@ namespace TipShaping
                     CameraFPSTextblocks[cam.GUIImageLoc].Text = "0 fps";
                     //cam.CloseCamera();
                     cam.DestroyCamera();
+                    Debug.Print($"Camera Index: {cam.GUIImageLoc}");
                     Debug.Print($"Camera IsGrabbing: {cam.IsGrabbing}");
                     Debug.Print($"Camera IsOpen: {cam.IsOpen}");
                     Debug.Print($"Camera IsCreated: {cam.IsCreated}");

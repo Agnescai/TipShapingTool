@@ -14,9 +14,9 @@ namespace TipShaping
     public class StepperMotorControl
     {
         public SerialPort serialPort = new SerialPort();
-        float SAlastPosition = 0;
-        float SFlastPosition = 0;
-        float LlastPosition = 0;
+        float XlastPosition = 0;
+        float YlastPosition = 0;
+        float ZlastPosition = 0;
         bool isInitial = true;
         private const float Threshold = 0.001f;  // Example: 0.001 mm as the threshold
         System.Timers.Timer timer;
@@ -154,22 +154,22 @@ namespace TipShaping
 
                 if (isInitial)
                 {
-                    SAlastPosition = xValue;
-                    SFlastPosition = yValue;
-                    LlastPosition = zValue;
+                    XlastPosition = xValue;
+                    YlastPosition = yValue;
+                    ZlastPosition = zValue;
                     isInitial = false;
                 }
 
 
                 // Update the UI to show "Moving"
-                if (HasSignificantMovement(xValue, SAlastPosition, Threshold) ||
-                    HasSignificantMovement(yValue, SFlastPosition, Threshold) ||
-                    HasSignificantMovement(zValue, LlastPosition, Threshold))
+                if (HasSignificantMovement(xValue, XlastPosition, Threshold) ||
+                    HasSignificantMovement(yValue, YlastPosition, Threshold) ||
+                    HasSignificantMovement(zValue, ZlastPosition, Threshold))
                 {
                     // Update last known positions if significant movement is detected
-                    SAlastPosition = xValue;
-                    SFlastPosition = yValue;
-                    LlastPosition = zValue;
+                    XlastPosition = xValue;
+                    YlastPosition = yValue;
+                    ZlastPosition = zValue;
 
 
 
@@ -194,7 +194,7 @@ namespace TipShaping
 
         }
 
-        public string GenerateGCode(string axisName, string velocity, string distance, string moveType, bool forward)
+        public string GenerateGCode(string axisName, string velocity, string distance, string moveType, bool positive)
         {
             string gCode = string.Empty;
 
@@ -239,7 +239,7 @@ namespace TipShaping
                     throw new ArgumentException("Unknown move type");
             }
 
-            var direction = forward ? distance : $"-{distance}";
+            var direction = positive ? distance : $"-{distance}";
             gCode += $" G0 {axis}{direction} F{velocityInMMPerMinInString}";
             return gCode;
         }

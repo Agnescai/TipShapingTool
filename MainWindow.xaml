@@ -10,154 +10,326 @@
 
     <!--<Viewbox Stretch="Uniform">-->
 
-        <Grid x:Name="WholeGrid"  Margin="0,0,0,0">
-           
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-               <RowDefinition Height="Auto"/>
-               <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+    <Grid x:Name="WholeGrid"  Margin="0,0,0,0">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
         <Menu Grid.Row="0" VerticalAlignment="Center" Height="Auto" Background="#FFF0F0F0" >
 
-                <MenuItem Header="File" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <MenuItem x:Name="OpenFile" Header="Open" Click="OpenFile_Click"/>
-                    <MenuItem x:Name="ExportFile" Header="Export" Click="ExportFile_Click"/>
-                </MenuItem>
+            <MenuItem Header="File" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <MenuItem x:Name="OpenFile" Header="Open" Click="OpenFile_Click"/>
+                <MenuItem x:Name="ExportFile" Header="Export" Click="ExportFile_Click"/>
+            </MenuItem>
 
-                <MenuItem x:Name="AxisConfiguration" Header="AxisConfiguration" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <MenuItem x:Name="TrioControllerConnection" Header="Trio Controller Connection" Click="TrioControllerConnection_Click"/>
-                    <MenuItem x:Name="BigTechControllerConnection" Header="BigTech Controller Connection" Click="BigTechControllerConnection_Click"/>
-                </MenuItem>
+            <MenuItem x:Name="AxisConfiguration" Header="AxisConfiguration" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <MenuItem x:Name="TrioControllerConnection" Header="Trio Controller Connection" Click="TrioControllerConnection_Click"/>
+                <MenuItem x:Name="BigTechControllerConnection" Header="BigTech Controller Connection" Click="BigTechControllerConnection_Click"/>
+            </MenuItem>
 
-                <MenuItem x:Name="CameraSetting" Header="CameraSetting" HorizontalAlignment="Center" Click="CameraSetting_Click"/>
-            </Menu>
+            <MenuItem x:Name="CameraSetting" Header="CameraSetting" HorizontalAlignment="Center" Click="CameraSetting_Click"/>
+        </Menu>
+
         <ProgressBar Grid.Row="1" x:Name ="ProgressBar" VerticalContentAlignment="Top"  HorizontalAlignment="Stretch" Margin=" 0,0,0,0"/>
         <!--<Separator Grid.Row="1" Margin="0,5,0,5" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Height="2"/>-->
 
         <Grid Grid.Row="2" x:Name="MPosGrid" Margin="5,0,5,0"  >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                
+            </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="XMPosIndex" Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="X" TextAlignment="Center"  />
-                <TextBlock x:Name="YMPosIndex" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="Y" TextAlignment="Center" Margin="5,0" />
-                <TextBlock x:Name="ZMPosIndex" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="Z" TextAlignment="Center" Margin="5,0" />
-                <TextBlock x:Name="SAMPosIndex" Grid.Row="0" Grid.Column="3" TextWrapping="Wrap" Text="SA" TextAlignment="Center" Margin="5,0"/>
-                <TextBlock x:Name="SFMPosIndex" Grid.Row="0" Grid.Column="4" TextWrapping="Wrap" Text="SF" TextAlignment="Center" Margin="5,0"/>
-                <TextBlock x:Name="LMPosIndex" Grid.Row="0" Grid.Column="5" TextWrapping="Wrap" Text="L" TextAlignment="Center" Margin="5,0"/>
-                <TextBlock x:Name="AxisStatusTextBlock" Grid.Row="0" Grid.Column="6" TextWrapping="Wrap" Text="Axis status" TextAlignment="Center" Margin="5,0"/>
+            <TextBlock x:Name="XMPosIndex" Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="X" TextAlignment="Center"  Margin="5,5,5,0" />
+            <TextBlock x:Name="YMPosIndex" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="Y" TextAlignment="Center" Margin="5,5,5,0"  />
+            <TextBlock x:Name="ZMPosIndex" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="Z" TextAlignment="Center" Margin="5,5,5,0"  />
+            <TextBlock x:Name="SAMPosIndex" Grid.Row="0" Grid.Column="3" TextWrapping="Wrap" Text="SA" TextAlignment="Center" Margin="5,5,5,0" />
+            <TextBlock x:Name="SFMPosIndex" Grid.Row="0" Grid.Column="4" TextWrapping="Wrap" Text="SF" TextAlignment="Center" Margin="5,5,5,0" />
+            <TextBlock x:Name="LMPosIndex" Grid.Row="0" Grid.Column="5" TextWrapping="Wrap" Text="L" TextAlignment="Center" Margin="5,5,5,0" />
+            <TextBlock x:Name="AxisStatusTextBlock" Grid.Row="0" Grid.Column="6" TextWrapping="Wrap" Text="Axis status" TextAlignment="Center" Margin="5,5,5,0" />
 
-                <TextBox x:Name="XMPosTextBox" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" TextAlignment="Center" />
-                <TextBox x:Name="YMPosTextBox" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Center" Margin="5,0"/>
-                <TextBox x:Name="ZMPosTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" TextAlignment="Center" Margin="5,0"/>
-                <TextBox x:Name="SAMPosTextBox" Grid.Row="1" Grid.Column="3" TextWrapping="Wrap" TextAlignment="Center" Margin="5,0"/>
-                <TextBox x:Name="SFMPosTextBox" Grid.Row="1" Grid.Column="4" TextWrapping="Wrap" TextAlignment="Center" Margin="5,0"/>
-                <TextBox x:Name="LMPosTextBox" Grid.Row="1" Grid.Column="5" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,0"/>
-                <TextBox x:Name="AxisStatus"  Grid.Row="1" Grid.Column="6" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,0"/>
+            <TextBox x:Name="XMPosTextBox" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" TextAlignment="Center"  Margin="5,5,5,0" />
+            <TextBox x:Name="YMPosTextBox" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Center" Margin="5,5,5,0"/>
+            <TextBox x:Name="ZMPosTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" TextAlignment="Center" Margin="5,5,5,0"/>
+            <TextBox x:Name="SAMPosTextBox" Grid.Row="1" Grid.Column="3" TextWrapping="Wrap" TextAlignment="Center" Margin="5,5,5,0"/>
+            <TextBox x:Name="SFMPosTextBox" Grid.Row="1" Grid.Column="4" TextWrapping="Wrap" TextAlignment="Center" Margin="5,5,5,0" />
+            <TextBox x:Name="LMPosTextBox" Grid.Row="1" Grid.Column="5" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,5,5,0"/>
+            <TextBox x:Name="AxisStatus" Grid.Row="1" Grid.Column="6" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,5,5,0" />
 
-                <Button x:Name="EnableZButton" Content="Enable Z" Grid.Row="2" Grid.Column="0" Click="EnableZButton_Click" Margin="0,10"/>
-                <Button x:Name="EnableYButton" Content="Enable Y" Grid.Row="2" Grid.Column="1" Click="EnableYButton_Click" Margin="5,10"/>
-                <Button x:Name="EnableXButton" Content="Enable X" Grid.Row="2" Grid.Column="2" Click="EnableXButton_Click" Margin="5,10"/>
-                <Button x:Name="EnableSAButton" Content="Enable SA" Grid.Row="2" Grid.Column="3" VerticalAlignment="Top" Click="EnableSAButton_Click" Margin="5,10"/>
-                <Button x:Name="EnableSFButton" Content="Enable SF" Grid.Row="2" Grid.Column="4" VerticalAlignment="Top" Click="EnableSFButton_Click" Margin="5,10"/>
-                <Button x:Name="EnableLButton" Content="Enable L" Grid.Row="2" Grid.Column="5" VerticalAlignment="Top" Click="EnableLButton_Click" Margin="5,10"/>
+            <Button x:Name="EnableXButton" Content="Enable X" Grid.Row="2" Grid.Column="0" Click="EnableXButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="EnableYButton" Content="Enable Y" Grid.Row="2" Grid.Column="1" Click="EnableYButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="EnableZButton" Content="Enable Z" Grid.Row="2" Grid.Column="2" Click="EnableZButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="EnableSAButton" Content="Enable SA" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" Click="EnableSAButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="EnableSFButton" Content="Enable SF" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Click="EnableSFButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="EnableLButton" Content="Enable L" Grid.Row="2" Grid.Column="5" VerticalAlignment="Center" Click="EnableLButton_Click" Margin="5,5,5,0"/>
 
-                <Button x:Name="HomeXButton" Content="Home X" Grid.Row="3" Grid.Column="0" Click="HomeXButton_Click" Margin="0,5"/>
-                <Button x:Name="HomeYButton" Content="Home Y" Grid.Row="3" Grid.Column="1" Click="HomeYButton_Click" Margin="5,5"/>
-                <Button x:Name="HomeZButton" Content="Home Z" Grid.Row="3" Grid.Column="2" Click="HomeZButton_Click" Margin="5,5"/>
-                <Button x:Name="HomeSAButton" Content="Home SA" Grid.Row="3" Grid.Column="3" Click="HomeSAButton_Click" Margin="5,5"/>
-                <Button x:Name="HomeSFButton" Content="Home SF" Grid.Row="3" Grid.Column="4" Click="HomeSFButton_Click" Margin="5,5"/>
-                <Button x:Name="HomeLButton" Content="Home L" Grid.Row="3" Grid.Column="5" Click="HomeLButton_Click" Margin="5,5"/>
-            </Grid>
+            <Button x:Name="HomeXButton" Content="Home X" Grid.Row="3" Grid.Column="0" Click="HomeXButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="HomeYButton" Content="Home Y" Grid.Row="3" Grid.Column="1" Click="HomeYButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="HomeZButton" Content="Home Z" Grid.Row="3" Grid.Column="2" Click="HomeZButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="HomeSAButton" Content="Home SA" Grid.Row="3" Grid.Column="3" Click="HomeSAButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="HomeSFButton" Content="Home SF" Grid.Row="3" Grid.Column="4" Click="HomeSFButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="HomeLButton" Content="Home L" Grid.Row="3" Grid.Column="5" Click="HomeLButton_Click" Margin="5,5,5,0"/>
+        </Grid>
 
-        <StackPanel  Grid.Row="3"  VerticalAlignment="Center" Orientation="Horizontal"  Height="38" Margin="5,0,5,0" >
-
-                <TextBlock x:Name="AxisGroupTextBlock"  TextWrapping="Wrap" Text="Axis Group:" VerticalAlignment="Center" Height="20" />
-                <ComboBox Name="AxisSelection" Width="120" IsDropDownOpen="False" AllowDrop="True" Height="25" 
-                                 VerticalContentAlignment="Center"
-                                 HorizontalContentAlignment="Center" 
-                                 SelectionChanged="AxisSelection_SelectionChanged"
-                                  Margin="5,0,0,0">
-                    <ComboBoxItem Content="XY" />
-                    <ComboBoxItem Content="Z" />
-                    <ComboBoxItem Content="SA" />
-                    <ComboBoxItem Content="SF" />
-                    <ComboBoxItem Content="L" />
-                </ComboBox>
-
-            <TextBlock x:Name="MotionTypeTextBlock" TextWrapping="Wrap" Margin="20,0,0,0" Text="Motion Type:" VerticalAlignment="Center" Height="20" />
-
-                <ComboBox Name="MoveTypeSelection" Width="120" Height="25" 
-                              VerticalContentAlignment="Center"
-                              HorizontalContentAlignment="Center" 
-                              SelectionChanged="MoveTypeSelection_SelectionChanged"
-                                  Margin="5,0,0,0">
-                    <ComboBoxItem Content="Relative Move" />
-                    <ComboBoxItem Content="Absolute Move" />
-                    <ComboBoxItem Content="Jog" />
-                </ComboBox>
-
+        <Grid Grid.Row="3" Margin="5,5,5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <!-- Axis Group Text -->
+                <ColumnDefinition Width="*" />
+                <!-- Axis Selection ComboBox -->
+                <ColumnDefinition Width="Auto" />
+                <!-- Motion Type Text -->
+                <ColumnDefinition Width="*" />
+                <!-- Move Type ComboBox -->
+                <ColumnDefinition Width="Auto" />
+                <!-- Velocity Text -->
+                <ColumnDefinition Width="*" />
                 <!-- Velocity Input -->
-                <TextBlock x:Name="VelocityTextBlock" Text="Velocity(mm/s):" VerticalAlignment="Center" Height="20" Margin="20,0,0,0"/>
-                <TextBox x:Name="VelocityInput" TextWrapping="Wrap" VerticalAlignment="Center" Width="55"  Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,0,0" />
+            </Grid.ColumnDefinitions>
 
-            </StackPanel>
+            <TextBlock x:Name="AxisGroupTextBlock" Grid.Column="0" TextWrapping="Wrap" Text="Axis Group:" VerticalAlignment="Center" />
+            <ComboBox Name="AxisSelection" Grid.Column="1" IsDropDownOpen="False" AllowDrop="True" 
+                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                  SelectionChanged="AxisSelection_SelectionChanged" Margin="5,0,0,0">
+                <ComboBoxItem Content="XY" />
+                <ComboBoxItem Content="Z" />
+                <ComboBoxItem Content="SA" />
+                <ComboBoxItem Content="SF" />
+                <ComboBoxItem Content="L" />
+            </ComboBox>
 
-        <StackPanel   Grid.Row="4"  VerticalAlignment="Center" Orientation="Horizontal"  Height="54"  Margin="5,0,5,0">
+            <TextBlock x:Name="MotionTypeTextBlock" Grid.Column="2" TextWrapping="Wrap" Margin="20,0,0,0" Text="Motion Type:" VerticalAlignment="Center" />
+            <ComboBox Name="MoveTypeSelection" Grid.Column="3" 
+                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                  SelectionChanged="MoveTypeSelection_SelectionChanged" Margin="5,0,0,0">
+                <ComboBoxItem Content="Relative Move" />
+                <ComboBoxItem Content="Absolute Move" />
+                <ComboBoxItem Content="Jog" />
+            </ComboBox>
 
-                <!-- Distance Input -->
-                <!--<Button x:Name="ForwardButton" Content="Forward" VerticalAlignment="Center" Height="20"  IsEnabled="True" PreviewMouseDown="ForwardButton_PreviewMouseDown" PreviewMouseUp="ForwardButton_PreviewMouseUp" Margin="150,0,0,0" Width="60">
-                    <Image Source="pack://application:,,,/Images/Larrow.png"/>
-                </Button>-->
+            <TextBlock x:Name="VelocityTextBlock" Grid.Column="4" Text="Velocity(mm/s):" VerticalAlignment="Center" Margin="20,0,0,0" />
+            <TextBox x:Name="VelocityInput" Grid.Column="5" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,0,0" />
+        </Grid>
 
-            <Button x:Name="ForwardButton" VerticalAlignment="Center" Height="35" Width="60"  Background="Transparent" BorderBrush="Transparent" 
-                    PreviewMouseDown="ForwardButton_PreviewMouseDown" 
-                    PreviewMouseUp="ForwardButton_PreviewMouseUp" 
-                    Margin="150,0,0,0" > 
-               
-                    <Image Source="pack://application:,,,/Images/LArrow.png" Height="30" Width="60" Stretch="Uniform"/>
-             </Button>
-            
-            <TextBox x:Name="DistanceInput" VerticalAlignment="Center" TextWrapping="Wrap" Width="54"  Height="20" HorizontalContentAlignment="Center" Margin="20,0,0,0" />
-            <TextBlock x:Name="DistanceUnit" VerticalAlignment="Center" TextWrapping="Wrap" Text="mm" Height="20" Margin="5,0,0,0"/>
-            <Button x:Name="ReverseButton"  VerticalAlignment="Center" Height="35" Width="60"  Background="Transparent" BorderBrush="Transparent" 
-                    PreviewMouseDown="ReverseButton_PreviewMouseDown" PreviewMouseUp="ReverseButton_PreviewMouseUp" Margin="20,0,0,0" >
+        <Grid Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,5,5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- Spacer -->
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <!--  -->
+                <ColumnDefinition Width="*" />
+                <!--Spacer -->
+
+            </Grid.ColumnDefinitions>
+
+            <!-- Up Left Button -->
+            <Button x:Name="UpLeftButton" Grid.Column="1" VerticalAlignment="Center" Height="35" Width="60" Margin="0,0,0,0"  Visibility="Collapsed"
+                    Background="Transparent" BorderBrush="Transparent" 
+                    PreviewMouseDown="UpLeftButton_PreviewMouseDown" 
+                    PreviewMouseUp="UpLeftButton_PreviewMouseUp">
+                <Image Source="pack://application:,,,/Images/Uarrow.png"  Height="31" Width="60" Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-45"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                    <!--<Image.RenderTransform>
+                        <RotateTransform Angle="45" CenterX="256" CenterY="256" />
+                    </Image.RenderTransform>-->
+                </Image>
+            </Button>
+
+            <!-- Up Button -->
+            <Button x:Name="UpButton" Grid.Column="2" VerticalAlignment="Center" Height="35" Width="60" Margin="60,0,60,0" Visibility="Collapsed"
+                    Background="Transparent" BorderBrush="Transparent" 
+                    PreviewMouseDown="UpButton_PreviewMouseDown" 
+                    PreviewMouseUp="UpButton_PreviewMouseUp">
+                <Image Source="pack://application:,,,/Images/Uarrow.png" Height="30" Width="60" Stretch="Uniform"/>
+            </Button>
+
+
+            <!-- Up right Button -->
+            <Button x:Name="UpRightButton" Grid.Column="3" VerticalAlignment="Center" Height="35" Width="60" Margin="0,0,0,0" Visibility="Collapsed"
+                    Background="Transparent" BorderBrush="Transparent" 
+                    PreviewMouseDown="UpRightButton_PreviewMouseDown" 
+                    PreviewMouseUp="UpRightButton_PreviewMouseUp">
+                <Image Source="pack://application:,,,/Images/Uarrow.png" Height="30" Width="60" Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="45"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </Button>
+
+
+
+        </Grid>
+
+
+
+
+        <Grid Grid.Row="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- Spacer for ForwardButton -->
+                <ColumnDefinition Width="Auto" />
+                <!-- ForwardButton -->
+                <ColumnDefinition Width="Auto" />
+                <!-- DistanceInput -->
+                <ColumnDefinition Width="Auto" />
+                <!-- DistanceUnit -->
+                <ColumnDefinition Width="Auto" />
+                <!-- ReverseButton -->
+                <ColumnDefinition Width="Auto" />
+                <!-- Spacer for ReverseButton -->
+                <ColumnDefinition Width="*" />
+                <!-- StopAllMotion -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Forward Button -->
+            <Button x:Name="ForwardButton" Grid.Column="1" VerticalAlignment="Center" Height="35" Width="60" Visibility="Collapsed"
+            Background="Transparent" BorderBrush="Transparent" 
+            PreviewMouseDown="ForwardButton_PreviewMouseDown" 
+            PreviewMouseUp="ForwardButton_PreviewMouseUp">
+                <Image Source="pack://application:,,,/Images/Larrow.png" Height="30" Width="60" Stretch="Uniform"/>
+            </Button>
+
+            <!-- Distance Input -->
+            <TextBox x:Name="DistanceInput" Grid.Column="2" VerticalAlignment="Center" TextWrapping="Wrap" 
+             Width="80" Height="20" HorizontalContentAlignment="Center" Margin="50,0,0,0" />
+
+            <!-- Distance Unit -->
+            <TextBlock x:Name="DistanceUnit" Grid.Column="3" VerticalAlignment="Center" TextWrapping="Wrap" 
+               Text="mm"  Width="40" Height="20" Margin="5,0,0,0" />
+
+            <!-- Reverse Button -->
+            <Button x:Name="ReverseButton" Grid.Column="4" VerticalAlignment="Center" Height="35" Width="60" Visibility="Collapsed"
+            Background="Transparent" BorderBrush="Transparent" 
+            PreviewMouseDown="ReverseButton_PreviewMouseDown" 
+            PreviewMouseUp="ReverseButton_PreviewMouseUp" Margin="5,0,0,0">
                 <Image Source="pack://application:,,,/Images/RArrow.png" Height="30" Width="60" Stretch="Uniform"/>
             </Button>
-            <Button x:Name="StopAllMotion" Content="Stop All Motion" VerticalAlignment="Center" Height="46" Width="123" Background="Red" FontWeight="Bold" Click="StopAllMotion_Click" Margin="20,0,0,0"/>
-            </StackPanel>
 
-            <UniformGrid Grid.Row="5"  Rows="1"  x:Name="RotationButtonsPanel" Height="20"  Visibility="Collapsed" >
-                <Button  x:Name="Rotation1" Content="30" Width="25" Height="20" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation2" Content="60" Width="25" Height="20" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation3" Content="90" Width="25" Height="20" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation4" Content="120" Width="25" Height="20" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation5" Content="150" Height="20" Width="25" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation6" Content="180" Height="20" Width="25" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation7" Content="210" Height="20" Width="25" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation8" Content="240" Height="20" Width="25" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation9" Content="270" Height="20" Width="25" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation10" Content="300" Height="20" Width="25" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation11" Content="330" Height="20" Width="25" Click="RotationButton_Click"/>
-                <Button  x:Name="Rotation12" Content="360" Width="25" Height="20" Click="RotationButton_Click"/>
-            </UniformGrid>
-        <StackPanel Grid.Row="6" VerticalAlignment="Center" Orientation="Horizontal"    Margin="5,0,5,0"  >
+
+        </Grid>
+
+        <Grid Grid.Row="6" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <!--  -->
+                <ColumnDefinition Width="*" />
+                <!--Spacer -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Downleft Button -->
+            <Button x:Name="DownLeftButton" Grid.Column="1" VerticalAlignment="Center" Height="36" Width="60" Margin="0,0,0,0" Visibility="Collapsed"
+                    Background="Transparent" BorderBrush="Transparent" 
+                    PreviewMouseDown="DownLeftButton_PreviewMouseDown" 
+                    PreviewMouseUp="DownLeftButton_PreviewMouseUp">
+                <Image Source="pack://application:,,,/Images/Darrow.png" Height="30" Width="60" Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="45"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </Button>
+
+            <!-- Down Button -->
+            <Button x:Name="DownButton" Grid.Column="2" VerticalAlignment="Center" Height="36" Width="60" Margin="60,0,60,0" Visibility="Collapsed"
+                    Background="Transparent" BorderBrush="Transparent" 
+                    PreviewMouseDown="DownButton_PreviewMouseDown" 
+                    PreviewMouseUp="DownButton_PreviewMouseUp" >
+                <Image Source="pack://application:,,,/Images/Darrow.png" Height="30" Width="60" Stretch="Uniform"/>
+            </Button>
+
+            <!-- DownRight Button -->
+            <Button x:Name="DownRightButton" Grid.Column="3" VerticalAlignment="Center" Height="36" Width="60" Margin="0,0,0,0" Visibility="Collapsed"
+                    Background="Transparent" BorderBrush="Transparent" 
+                    PreviewMouseDown="DownRightButton_PreviewMouseDown" 
+                    PreviewMouseUp="DownRightButton_PreviewMouseUp" >
+                <Image Source="pack://application:,,,/Images/Darrow.png" Height="30" Width="60" Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-45"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </Button>
+        </Grid>
+
+
+        <UniformGrid Grid.Row="7" Rows="1"  x:Name="RotationButtonsPanel" Height="20"  Visibility="Collapsed" Margin="5,5,5,0">
+            <Button  x:Name="Rotation1" Content="30" Width="25" Height="20" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation2" Content="60" Width="25" Height="20" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation3" Content="90" Width="25" Height="20" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation4" Content="120" Width="25" Height="20" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation5" Content="150" Height="20" Width="25" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation6" Content="180" Height="20" Width="25" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation7" Content="210" Height="20" Width="25" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation8" Content="240" Height="20" Width="25" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation9" Content="270" Height="20" Width="25" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation10" Content="300" Height="20" Width="25" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation11" Content="330" Height="20" Width="25" Click="RotationButton_Click"/>
+            <Button  x:Name="Rotation12" Content="360" Width="25" Height="20" Click="RotationButton_Click"/>
+        </UniformGrid>
+
+        <Grid Grid.Row="8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- Spacer -->
+                <ColumnDefinition Width="Auto" />
+                <!--  -->
+                <ColumnDefinition Width="*" />
+                <!--Spacer -->
+            </Grid.ColumnDefinitions>
+            <!-- Stop All Motion Button -->
+            <Button Grid.Column="1" x:Name="StopAllMotion"  Content="Stop All Motion" VerticalAlignment="Center" Width="120"
+                     Height="46" Background="Red" FontWeight="Bold" Click="StopAllMotion_Click"  />
+
+        </Grid>
+
+        <StackPanel Grid.Row="9" VerticalAlignment="Center" Orientation="Horizontal" Margin="5,0,5,0"  >
             <TextBox x:Name="VR15TextBox"  TextWrapping="Wrap"  Width="30"/>
             <Button x:Name="ShowVR11button" Content="Show VR15"  Margin="10,0,0,0" Click="ShowVR15button_Click" />
         </StackPanel>

@@ -14,8 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Darrow.png" />
     <None Remove="Images\Larrow.png" />
     <None Remove="Images\Rarrow.png" />
+    <None Remove="Images\Uarrow.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,8 +36,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\Larrow.png" />
+    <Resource Include="Images\Darrow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Larrow.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\Rarrow.png" />
+    <Resource Include="Images\Uarrow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

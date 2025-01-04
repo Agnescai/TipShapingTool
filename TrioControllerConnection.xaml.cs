@@ -41,16 +41,24 @@ namespace TipShaping
                 {
                     // Attempt to open a connection
                     var connectionResult = trioMotionControl.IsControllerConnected();
-                    if (connectionResult != null)
+                    if (connectionResult != true)
                     {
                         // Connect to the controller
                         trioMotionControl.ConnectToController(IPAddress.Text);
                         ConnectControllerButton.Content = "Disconnect";
+                        trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,0,1);
+                        trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,1,1);
+                        trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,2,1);
+                        trioMotionControl.Run("STARTUP", -1);//-1 means the next available process
                     }
                     else
                     {
                         // Disconnect from the controller
+                        trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE, 0, 0);
+                        trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE, 1, 0);
+                        trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE, 2, 0);
                         trioMotionControl.DisconnectToController(IPAddress.Text);
+                        trioMotionControl?.Dispose();
                         ConnectControllerButton.Content = "Connect";
                     }
                 }
