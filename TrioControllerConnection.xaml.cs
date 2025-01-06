@@ -52,6 +52,7 @@ namespace TipShaping
                         trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,1,1);
                         trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE,2,1);
                         trioMotionControl.Run("STARTUP", -1);//-1 means the next available process
+                        trioMotionControl.IndicateAxisEnable();//indicate the Enable XYZ buttons.
                         Debug.Print("Drive enabled");
                     }
                     else

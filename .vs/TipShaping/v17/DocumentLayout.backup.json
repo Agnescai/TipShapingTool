@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\ying.cai\\source\\repos\\tipshaping\\triomotioncontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:triomotioncontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\ying.cai\\source\\repos\\tipshaping\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\ying.cai\\source\\repos\\tipshaping\\triocontrollerconnection.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:triocontrollerconnection.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\ying.cai\\source\\repos\\tipshaping\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
@@ -15,16 +23,8 @@
       "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:steppermotorcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\ying.cai\\source\\repos\\tipshaping\\triomotioncontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:triomotioncontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\ying.cai\\source\\repos\\tipshaping\\bigtechcontrollerconnection.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:bigtechcontrollerconnection.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\ying.cai\\source\\repos\\tipshaping\\triocontrollerconnection.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:triocontrollerconnection.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\ying.cai\\source\\repos\\tipshaping\\bigtechcontrollerconnection.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -53,11 +53,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\MainWindow.xaml",
               "RelativeDocumentMoniker": "MainWindow.xaml",
@@ -69,64 +69,63 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\MainWindow.xaml.cs",
               "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAADQAAAA4AAAAAAAAAA==",
+              "ViewState": "AgIAADsAAAAAAAAAAAAAwFAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-20T07:55:58.978Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "BigTechControllerConnection.xaml",
               "DocumentMoniker": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\BigTechControllerConnection.xaml",
               "RelativeDocumentMoniker": "BigTechControllerConnection.xaml",
               "ToolTip": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\BigTechControllerConnection.xaml",
               "RelativeToolTip": "BigTechControllerConnection.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-28T23:50:04.721Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-28T23:50:04.721Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "TrioMotionControl.cs",
               "DocumentMoniker": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\TrioMotionControl.cs",
               "RelativeDocumentMoniker": "TrioMotionControl.cs",
-              "ToolTip": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\TrioMotionControl.cs",
-              "RelativeToolTip": "TrioMotionControl.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAQwB4AAAAJAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\TrioMotionControl.cs*",
+              "RelativeToolTip": "TrioMotionControl.cs*",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAlwFMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-27T20:46:08.851Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "StepperMotorControl.cs",
               "DocumentMoniker": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\StepperMotorControl.cs",
               "RelativeDocumentMoniker": "StepperMotorControl.cs",
               "ToolTip": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\StepperMotorControl.cs",
               "RelativeToolTip": "StepperMotorControl.cs",
-              "ViewState": "AgIAAOkAAAAAAAAAAAAQwAMBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIwAAAAAAAAAAAAQwJYAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-03T23:40:05.349Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "TrioControllerConnection.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\TrioControllerConnection.xaml.cs",
               "RelativeDocumentMoniker": "TrioControllerConnection.xaml.cs",
               "ToolTip": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\TrioControllerConnection.xaml.cs",
               "RelativeToolTip": "TrioControllerConnection.xaml.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAABgAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAAD8AAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-29T01:32:13.406Z",
               "EditorCaption": ""

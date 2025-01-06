@@ -70,10 +70,16 @@ namespace TipShaping
 
             trioMotionControl = new TrioMotionControl();
             trioMotionControl.TrioPositionUpdated += TrioUpdatePositions;
-         
+            trioMotionControl.TrioEnableButtonContentUpdated += InitialEnableButtons;
         }
 
-       
+        private void InitialEnableButtons(double[] enableValue)
+        {
+            EnableXButton.Content = enableValue[1] == 0 ? "Enable X" : "Disenable X";
+            EnableYButton.Content = enableValue[0] == 0 ? "Enable Y" : "Disenable Y";
+            EnableZButton.Content = enableValue[2] == 0 ? "Enable Z" : "Disenable Z";
+        }
+
 
 
         private void TrioUpdatePositions(double x, double y, double z)

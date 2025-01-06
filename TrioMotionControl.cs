@@ -18,6 +18,9 @@ namespace TipShaping
         public delegate void PositionUpdateHandler(double x, double y, double z);
         public event PositionUpdateHandler TrioPositionUpdated;
         private DispatcherTimer positionUpdateTimer;
+        public delegate void EnableButtonContentUpdatedHandler(double[] enableValue);
+        public event EnableButtonContentUpdatedHandler TrioEnableButtonContentUpdated;
+
         int posUpdateInterval = 100;//ms
 
         public TrioMotionControl() 
@@ -79,6 +82,26 @@ namespace TipShaping
             }
         }
 
+        public void IndicateAxisEnable()
+        {
+            if (this.IsOpen(PortId.EthernetREMOTE))
+            {
+                double temp;
+                double[] enableValue = new double[3];
+                for (int i = 0; i < 3; i++)
+                {
+                    this.GetAxisParameter(AxisParameter.AXIS_ENABLE, i, out temp);
+                    enableValue[i] = temp;
+                }
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    TrioEnableButtonContentUpdated?.Invoke(enableValue);
+                });
+
+            }
+            
+        }
 
 
         public void ConnectToController(string ip_address)
@@ -94,6 +117,8 @@ namespace TipShaping
                 {
                     positionUpdateTimer.Start();
                 }
+               
+
             }
             else
             {
