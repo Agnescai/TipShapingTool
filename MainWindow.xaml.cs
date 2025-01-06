@@ -21,6 +21,8 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Diagnostics.Eventing.Reader;
 using Windows.Storage.Streams;
+using TrioMotion.TrioPC_NET;
+using System.Net;
 
 
 namespace TipShaping
@@ -104,21 +106,23 @@ namespace TipShaping
 
                 if (!isAxisEnabled[AxisIndex])
                 {
-                    MessageBox.Show("X Enabled");
+                   
                     // Add code to enable X
                     trioMotionControl.SetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, AxisIndex, 1);
+                    MessageBox.Show("X Enabled");
                 }
                 else
                 {
-                    MessageBox.Show("X Disabled");
+                   
                     // Add code to disable X
                     trioMotionControl.SetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, AxisIndex, 0);
+                    MessageBox.Show("X Disabled");
                 }
 
 
                 isAxisEnabled[AxisIndex] = !isAxisEnabled[AxisIndex];
                 // Update the button content
-                EnableYButton.Content = isAxisEnabled[AxisIndex] ? "Disable X" : "Enable X";
+                EnableXButton.Content = isAxisEnabled[AxisIndex] ? "Disable X" : "Enable X";
             }
             else
             {
@@ -144,15 +148,17 @@ namespace TipShaping
 
                 if (!isAxisEnabled[AxisIndex])
                 {
-                    MessageBox.Show("Y Enabled");
+                    
                     // Add code to enable Y
                     trioMotionControl.SetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, AxisIndex, 1);
+                    MessageBox.Show("Y Enabled");
                 }
                 else
                 {
-                    MessageBox.Show("Y Disabled");
+                    
                     // Add code to disable Y
                     trioMotionControl.SetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, AxisIndex, 0);
+                    MessageBox.Show("Y Disabled");
                 }
 
 
@@ -182,21 +188,23 @@ namespace TipShaping
 
                 if (!isAxisEnabled[AxisIndex])
                 {
-                    MessageBox.Show("Z Enabled");
+                    
                     // Add code to enable Z
                     trioMotionControl.SetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, AxisIndex, 1);
+                    MessageBox.Show("Z Enabled");
                 }
                 else
                 {
-                    MessageBox.Show("Z Disabled");
+                    
                     // Add code to disable Z
                     trioMotionControl.SetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, AxisIndex, 0);
+                    MessageBox.Show("Z Disabled");
                 }
 
 
                 isAxisEnabled[AxisIndex] = !isAxisEnabled[AxisIndex];
                 // Update the button content
-                EnableYButton.Content = isAxisEnabled[AxisIndex] ? "Disable Z" : "Enable Z";
+                EnableZButton.Content = isAxisEnabled[AxisIndex] ? "Disable Z" : "Enable Z";
             }
             else
             {
@@ -386,7 +394,12 @@ namespace TipShaping
                     double[] distances = new double[1] { distanceValue }; // Distance array for relative move
                     int baseAxis = axisIndex;                            // Base axis for movement
                     double velocityValue = double.Parse(velocity);
-                    trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
+                    //Debug.Print($"velocity:{velocity}");
+                    double Accel = 1000;
+                    double Decel = 1000;
+                    double Jerk = 2000;
+                    trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
+                    Debug.Print("Set Motion successfully.");
 
                     if (moveType == "Jog")
                     {
@@ -398,18 +411,23 @@ namespace TipShaping
 
                     if (moveType == "Relative Move")
                     {
-
-                        // Call MoveRel
-                        bool success = trioMotionControl.MoveRel(distances, baseAxis);
-
-                        if (success)
+                        Debug.Print("Enter relative move");
+                        try
                         {
-                            Console.WriteLine("Relative move on X axis completed successfully.");
+                            // Call MoveRel
+                            bool success = trioMotionControl.MoveRel(distances, baseAxis);
+
+                            if (success)
+                            {
+                                Console.WriteLine("Relative move on X axis completed successfully.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Relative move on X axis failed.");
+                            }
                         }
-                        else
-                        {
-                            Console.WriteLine("Relative move on X axis failed.");
-                        }
+                        catch(Exception ex) { Debug.Print(axisName + ": " + ex.ToString()); }
+
 
                     }
 
@@ -557,7 +575,10 @@ namespace TipShaping
                     double[] distances = new double[1] { distanceValue }; // Distance array for relative move
                     int baseAxis = axisIndex;                            // Base axis for movement
                     double velocityValue = double.Parse(velocity);
-                    trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
+                    double Accel = 1000;
+                    double Decel = 1000;
+                    double Jerk = 2000;
+                    trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
 
                     if (moveType == "Jog")
                     {
@@ -822,6 +843,9 @@ namespace TipShaping
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             stepperMotorControl.StopMonitoringPosition();
+            trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE, 0, 0);//Y
+            trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE, 1, 0);//X
+            trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE, 2, 0);//Z
             trioMotionControl?.Dispose();
         }
 
@@ -1082,7 +1106,10 @@ namespace TipShaping
                     double[] distances = new double[1] { distanceValue }; // Distance array for relative move
                     int baseAxis = axisIndex;                            // Base axis for movement
                     double velocityValue = double.Parse(velocity);
-                    trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
+                    double Accel = 1000;
+                    double Decel = 1000;
+                    double Jerk = 2000;
+                    trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
 
                     if (moveType == "Jog")
                     {
@@ -1171,7 +1198,7 @@ namespace TipShaping
             if (moveType == "Jog")
             {
                 // Stop jogging
-                if (axisName == "X") //X axis
+                if (axisName == "Y" || axisName == "Z") //X axis
                 {
 
                     trioMotionControl.Cancel(0, axisIndex);//.0 cancels the current move on the base axis, 1 cancels the buffered moves on the base axis.
@@ -1251,7 +1278,10 @@ namespace TipShaping
                     double[] distances = new double[1] { distanceValue }; // Distance array for relative move
                     int baseAxis = axisIndex;                            // Base axis for movement
                     double velocityValue = double.Parse(velocity);
-                    trioMotionControl.SetMotion(baseAxis, velocityValue);//can also set Accel, Decel, Jerk
+                    double Accel = 1000;
+                    double Decel = 1000;
+                    double Jerk = 2000;
+                    trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
 
                     if (moveType == "Jog")
                     {
@@ -1340,7 +1370,7 @@ namespace TipShaping
             if (moveType == "Jog")
             {
                 // Stop jogging
-                if (axisName == "Y") //Y axis
+                if (axisName == "Y" || axisName == "Z") //Y axis
                 {
 
                     trioMotionControl.Cancel(0, axisIndex);//.0 cancels the current move on the base axis, 1 cancels the buffered moves on the base axis.
@@ -1394,6 +1424,16 @@ namespace TipShaping
         private void DownRightButton_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        private void DisconnectTrioButton_Click(object sender, RoutedEventArgs e)
+        {
+            trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE, 0, 0);
+            trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE, 1, 0);
+            trioMotionControl.SetAxisParameter(AxisParameter.DRIVE_ENABLE, 2, 0);
+            trioMotionControl.DisconnectToController("127.0.0.1");
+            trioMotionControl?.Dispose();
+            Debug.Print("Trio Controller is disconnected.");
         }
     }
 }
