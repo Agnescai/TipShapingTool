@@ -23,6 +23,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0" VerticalAlignment="Center" Height="Auto" Background="#FFF0F0F0" >
@@ -131,8 +133,27 @@
             <TextBlock x:Name="VelocityTextBlock" Grid.Column="4" Text="Velocity(mm/s):" VerticalAlignment="Center" Margin="20,0,0,0" />
             <TextBox x:Name="VelocityInput" Grid.Column="5" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,0,0" />
         </Grid>
-
+        
         <Grid Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,5,5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- Spacer -->
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <!--  -->
+                <ColumnDefinition Width="*" />
+                <!--Spacer -->
+
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="UpLeftRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" />
+            <TextBlock x:Name="UpRestTravelTextBlock" Grid.Column="2" VerticalAlignment="Center" Margin="60,0,60,0" />
+            <TextBlock x:Name="UpRightRestTravelTextBlock" Grid.Column="3" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+        </Grid>
+        
+        <Grid Grid.Row="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,5,5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <!-- Spacer -->
@@ -198,52 +219,61 @@
 
 
 
-        <Grid Grid.Row="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,5,0">
+        <Grid Grid.Row="6" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <!-- Spacer for ForwardButton -->
                 <ColumnDefinition Width="Auto" />
-                <!-- ForwardButton -->
                 <ColumnDefinition Width="Auto" />
-                <!-- DistanceInput -->
+                
                 <ColumnDefinition Width="Auto" />
-                <!-- DistanceUnit -->
+                
                 <ColumnDefinition Width="Auto" />
-                <!-- ReverseButton -->
+                
                 <ColumnDefinition Width="Auto" />
-                <!-- Spacer for ReverseButton -->
+              
+                <ColumnDefinition Width="Auto" />
+                
+               
                 <ColumnDefinition Width="*" />
-                <!-- StopAllMotion -->
+                
             </Grid.ColumnDefinitions>
 
-            <!-- Forward Button -->
-            <Button x:Name="ForwardButton" Grid.Column="1" VerticalAlignment="Center" Height="35" Width="60" Visibility="Collapsed"
-            Background="Transparent" BorderBrush="Transparent" 
-            PreviewMouseDown="ForwardButton_PreviewMouseDown" 
-            PreviewMouseUp="ForwardButton_PreviewMouseUp">
-                <Image Source="pack://application:,,,/Images/Larrow.png" Height="30" Width="60" Stretch="Uniform"/>
-            </Button>
-
-            <!-- Distance Input -->
-            <TextBox x:Name="DistanceInput" Grid.Column="2" VerticalAlignment="Center" TextWrapping="Wrap" 
-             Width="80" Height="20" HorizontalContentAlignment="Center" Margin="50,0,0,0" />
-
-            <!-- Distance Unit -->
-            <TextBlock x:Name="DistanceUnit" Grid.Column="3" VerticalAlignment="Center" TextWrapping="Wrap" 
-               Text="mm"  Width="40" Height="20" Margin="5,0,0,0" />
-
+            <TextBlock x:Name="ReverseRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" />
+            
             <!-- Reverse Button -->
-            <Button x:Name="ReverseButton" Grid.Column="4" VerticalAlignment="Center" Height="35" Width="60" Visibility="Collapsed"
+            <Button x:Name="ReverseButton" Grid.Column="2" VerticalAlignment="Center" Height="35" Width="60" Visibility="Collapsed"
             Background="Transparent" BorderBrush="Transparent" 
             PreviewMouseDown="ReverseButton_PreviewMouseDown" 
             PreviewMouseUp="ReverseButton_PreviewMouseUp" Margin="5,0,0,0">
-                <Image Source="pack://application:,,,/Images/RArrow.png" Height="30" Width="60" Stretch="Uniform"/>
+                <Image Source="pack://application:,,,/Images/LArrow.png" Height="30" Width="60" Stretch="Uniform"/>
             </Button>
+
+            <!-- Distance Input -->
+            <TextBox x:Name="DistanceInput" Grid.Column="3" VerticalAlignment="Center" TextWrapping="Wrap" 
+            Width="80" Height="20" HorizontalContentAlignment="Center" Margin="50,0,0,0" />
+
+            <!-- Distance Unit -->
+            <TextBlock x:Name="DistanceUnit" Grid.Column="4" VerticalAlignment="Center" TextWrapping="Wrap" 
+            Text="mm"  Width="40" Height="20" Margin="5,0,0,0" />
+
+
+            <!-- Forward Button -->
+            <Button x:Name="ForwardButton" Grid.Column="5" VerticalAlignment="Center" Height="35" Width="60" Visibility="Collapsed"
+            Background="Transparent" BorderBrush="Transparent" 
+            PreviewMouseDown="ForwardButton_PreviewMouseDown" 
+            PreviewMouseUp="ForwardButton_PreviewMouseUp" Margin="5,0,0,0">
+                <Image Source="pack://application:,,,/Images/Rarrow.png" Height="30" Width="60" Stretch="Uniform"/>
+            </Button>
+
+
+            <TextBlock x:Name="ForwardRestTravelTextBlock" Grid.Column="6" VerticalAlignment="Center" Margin="5,0,0,0" />
+
 
 
         </Grid>
 
-        <Grid Grid.Row="6" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,5,0">
+        <Grid Grid.Row="7" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
 
@@ -298,8 +328,26 @@
             </Button>
         </Grid>
 
+        <Grid Grid.Row="8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,5,5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- Spacer -->
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <!--  -->
+                <ColumnDefinition Width="*" />
+                <!--Spacer -->
 
-        <UniformGrid Grid.Row="7" Rows="1"  x:Name="RotationButtonsPanel" Height="20"  Visibility="Collapsed" Margin="5,5,5,0">
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="DownLeftRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" />
+            <TextBlock x:Name="DownRestTravelTextBlock" Grid.Column="2" VerticalAlignment="Center" Margin="60,0,60,0" />
+            <TextBlock x:Name="DownRightRestTravelTextBlock" Grid.Column="3" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+        </Grid>
+
+        <UniformGrid Grid.Row="9" Rows="1"  x:Name="RotationButtonsPanel" Height="20"  Visibility="Collapsed" Margin="5,5,5,0">
             <Button  x:Name="Rotation1" Content="30" Width="25" Height="20" Click="RotationButton_Click"/>
             <Button  x:Name="Rotation2" Content="60" Width="25" Height="20" Click="RotationButton_Click"/>
             <Button  x:Name="Rotation3" Content="90" Width="25" Height="20" Click="RotationButton_Click"/>
@@ -314,7 +362,7 @@
             <Button  x:Name="Rotation12" Content="360" Width="25" Height="20" Click="RotationButton_Click"/>
         </UniformGrid>
 
-        <Grid Grid.Row="8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,0,0">
+        <Grid Grid.Row="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <!-- Spacer -->
@@ -329,7 +377,7 @@
 
         </Grid>
 
-        <StackPanel Grid.Row="9" VerticalAlignment="Center" Orientation="Horizontal" Margin="5,0,5,0"  >
+        <StackPanel Grid.Row="11" VerticalAlignment="Center" Orientation="Horizontal" Margin="5,0,5,0"  >
             <TextBox x:Name="VR15TextBox"  TextWrapping="Wrap"  Width="30"/>
             <Button x:Name="ShowVR11button" Content="Show VR15"  Margin="10,0,0,0" Click="ShowVR15button_Click" />
             <Button x:Name="DisconnectTrioButton" Content="Disconnect Trio" Margin="10,0,0,0" Click="DisconnectTrioButton_Click"/>

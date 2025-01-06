@@ -130,7 +130,7 @@ namespace TipShaping
 
             // Read the line of data received from the serial port
             string data = serialPort.ReadLine().Trim();  // Trim any unnecessary whitespace or newline characters
-            Debug.WriteLine($"Received Data: {data}");
+            //Debug.WriteLine($"Received Data: {data}");
 
             if (data.StartsWith("X:"))
             {
@@ -253,42 +253,12 @@ namespace TipShaping
             return Math.Abs(currentPos - lastPos) > threshold;
         }
 
-
-
-        // Extract the position for a specific axis from the data string
-        private string ExtractAxisPosition(string data, string axis)
+        public bool IsSerialPortOpen()
         {
-            try
-            {
-                // Log the data for debugging
-                Debug.WriteLine($"Received Data: {data}");
-
-                // Regex pattern to extract the axis position as a number (including potential decimals or negative signs)
-                string pattern = $@"{axis}([\-0-9.]+)";
-
-                Regex regex = new Regex(pattern);
-                Match match = regex.Match(data);
-
-                // If the axis is found in the data
-                if (match.Success)
-                {
-                    // Return the extracted position value
-                    Debug.WriteLine($"{axis} Position Extracted: {match.Groups[1].Value}");
-                    return match.Groups[1].Value;
-                }
-                else
-                {
-                    // Log if the axis was not found
-                    Debug.WriteLine($"Axis {axis} not found in data.");
-                    return "N/A"; // Or return an appropriate default value
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors
-                Debug.WriteLine($"Error extracting axis position: {ex.Message}");
-                return "Error"; // Return an error message if something goes wrong
-            }
+            return serialPort != null && serialPort.IsOpen;
         }
+
+
+
     }
 }

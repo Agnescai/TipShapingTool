@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TrioMotion.TrioPC_NET;
+using System.Windows;
+using System.Windows.Threading;
+
 
       
 namespace TipShaping
@@ -12,9 +15,46 @@ namespace TipShaping
 
     public class TrioMotionControl : TrioPC
     {
+        public delegate void PositionUpdateHandler(double x, double y, double z);
+        public event PositionUpdateHandler TrioPositionUpdated;
+        private DispatcherTimer positionUpdateTimer;
+        int posUpdateInterval = 100;//ms
+
         public TrioMotionControl() 
-        { 
+        {
+            // Initialize the timer
+            positionUpdateTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(posUpdateInterval) // Update every 100 ms
+            };
+            positionUpdateTimer.Tick += PositionUpdateTimer_Tick;
         }
+
+        private void PositionUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            if (this.IsControllerConnected())
+            {
+                try
+                {
+                    double[] AxisPos = new double[3];
+                    for (int i = 0; i < 3; i++)
+                    {
+                        this.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.MPOS, i, out AxisPos[i]);
+                    }
+
+                    // Raise the TrioPositionUpdated event on the main thread
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        TrioPositionUpdated?.Invoke(AxisPos[0], AxisPos[1], AxisPos[2]);
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error updating positions: {0}", ex.Message);
+                }
+            }
+        }
+
 
         internal void tripleVRs(int startingIndex, int number)
         {
@@ -39,6 +79,8 @@ namespace TipShaping
             }
         }
 
+
+
         public void ConnectToController(string ip_address)
         {
             this.SetHost(ip_address);
@@ -46,6 +88,12 @@ namespace TipShaping
             if (this.Open(PortType.Ethernet, PortId.EthernetREMOTE))
             {
                 Console.WriteLine("Connected to contoller on ip: {0}", this.HostAddress);
+                
+                // Start the position update timer
+                if (!positionUpdateTimer.IsEnabled)
+                {
+                    positionUpdateTimer.Start();
+                }
             }
             else
             {
@@ -59,6 +107,12 @@ namespace TipShaping
             {
                 if (this.IsOpen(PortId.EthernetREMOTE))
                 {
+                    // Stop the timer when disconnecting
+                    if (positionUpdateTimer.IsEnabled)
+                    {
+                        positionUpdateTimer.Stop();
+                    }
+
                     this.Close(PortId.EthernetREMOTE);
                     Console.WriteLine("Disconnected from controller at IP: {0}", ipAddress);
                 }

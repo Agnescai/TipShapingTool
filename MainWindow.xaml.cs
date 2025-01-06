@@ -23,6 +23,7 @@ using System.Diagnostics.Eventing.Reader;
 using Windows.Storage.Streams;
 using TrioMotion.TrioPC_NET;
 using System.Net;
+using System.IO;
 
 
 namespace TipShaping
@@ -37,8 +38,8 @@ namespace TipShaping
         private bool[] isAxisEnabled = { false, false, false, false, false, false };
         double[] isAxisEnabledD = { 0, 0, 0, 0, 0, 0 };
         double[] isDriveEnabledD = { 0, 0, 0, 0, 0, 0 };
-        string[] Max_Pos = { "100", "100", "20", "6", "14", "36000" }; //forward travel limit SA,SF 13mm 30mm
-        string[] Min_Pos = { "-100", "-100", "-20", "-6", "-14", "-36000" }; //reverse travel limit
+        string[] Max_Pos = { "105", "105", "20", "6", "14", "360000000" }; //forward travel limit SA,SF 13mm 30mm
+        string[] Min_Pos = { "-105", "-105", "-20", "-6", "-14", "-36000" }; //reverse travel limit
                                                                              //private string SAlastPosition = string.Empty;
                                                                              //private string SFlastPosition = string.Empty;
                                                                              //private string LlastPosition = string.Empty;
@@ -49,6 +50,7 @@ namespace TipShaping
         private TrioControllerConnection trioControllerConnectionWindow;
         private StepperMotorControl stepperMotorControl;
         private TrioMotionControl trioMotionControl;
+        private DispatcherTimer trioPositionUpdateTimer;
 
         public MainWindow()
         {
@@ -67,8 +69,52 @@ namespace TipShaping
             stepperMotorControl.MovingStatusUpdated += StepperMotorOnMovingStatusUpdated;
 
             trioMotionControl = new TrioMotionControl();
-
+            trioMotionControl.TrioPositionUpdated += TrioUpdatePositions;
+         
         }
+
+       
+
+
+        private void TrioUpdatePositions(double x, double y, double z)
+        {
+            double XMPos = y;
+            double YMPos = x;
+            double ZMPos = z;
+            try
+            {
+                // Fetch the measured positions
+               
+                        XMPosTextBox.Text = XMPos.ToString("F3");
+                        YMPosTextBox.Text = YMPos.ToString("F3");
+                        ZMPosTextBox.Text = ZMPos.ToString("F3");
+
+                if (AxisSelection.SelectedItem != null)
+                {
+                    string selectedAxis = AxisSelection.SelectedItem.ToString();
+                    if (selectedAxis == "XY") // 0: Y, 1: X
+                    {
+                        ReverseRestTravelTextBlock.Text = Math.Abs(double.Parse(Min_Pos[1]) - XMPos).ToString("F3");
+                        ForwardRestTravelTextBlock.Text = Math.Abs(double.Parse(Max_Pos[1]) - XMPos).ToString("F3");
+                        UpRestTravelTextBlock.Text = Math.Abs(double.Parse(Max_Pos[0]) - YMPos).ToString("F3");
+                        DownRestTravelTextBlock.Text = Math.Abs(double.Parse(Min_Pos[0]) - YMPos).ToString("F3");
+                    }
+                    else if (selectedAxis == "Z")
+                    {
+                        UpRestTravelTextBlock.Text =Math.Abs(double.Parse(Max_Pos[2]) - ZMPos).ToString("F3");
+                        DownRestTravelTextBlock.Text = Math.Abs(double.Parse(Min_Pos[2]) - ZMPos).ToString("F3");
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating positions: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
+
 
         private void StepperMotorOnPositionUpdated(float x, float y, float z)
         {
@@ -76,6 +122,26 @@ namespace TipShaping
             SAMPosTextBox.Text = $"{x:F3}";
             SFMPosTextBox.Text = $"{y:F3}";
             LMPosTextBox.Text = $"{z:F3}";
+
+            if (AxisSelection.SelectedItem != null)
+            {
+                string selectedAxis = AxisSelection.SelectedItem.ToString();
+                if (selectedAxis == "SA")
+                { 
+                    
+                    UpRestTravelTextBlock.Text = Math.Abs(float.Parse(Max_Pos[3]) - x).ToString("F3");
+                    DownRestTravelTextBlock.Text = Math.Abs(float.Parse(Min_Pos[3]) - x).ToString("F3");
+                }
+                else if (selectedAxis == "SF")
+                {
+                    UpRestTravelTextBlock.Text = Math.Abs(float.Parse(Max_Pos[4]) - y).ToString("F3");
+                    DownRestTravelTextBlock.Text = Math.Abs(float.Parse(Min_Pos[4]) - y).ToString("F3");
+                } else if (selectedAxis == "L")
+                {
+                    UpRestTravelTextBlock.Text = Math.Abs(float.Parse(Max_Pos[5]) - z).ToString("F3");
+                    DownRestTravelTextBlock.Text = Math.Abs(float.Parse(Min_Pos[5]) - z).ToString("F3");
+                }
+            }
         }
         private void StepperMotorOnMovingStatusUpdated(bool Moving)
         {
@@ -119,8 +185,9 @@ namespace TipShaping
                     MessageBox.Show("X Disabled");
                 }
 
-
-                isAxisEnabled[AxisIndex] = !isAxisEnabled[AxisIndex];
+                //update one more time after action
+                trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, AxisIndex, out isAxisEnabledD[AxisIndex]);
+                isAxisEnabled[AxisIndex] = (isAxisEnabledD[AxisIndex] == 1);
                 // Update the button content
                 EnableXButton.Content = isAxisEnabled[AxisIndex] ? "Disable X" : "Enable X";
             }
@@ -161,8 +228,9 @@ namespace TipShaping
                     MessageBox.Show("Y Disabled");
                 }
 
-
-                isAxisEnabled[AxisIndex] = !isAxisEnabled[AxisIndex];
+                //update one more time after action
+                trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, AxisIndex, out isAxisEnabledD[AxisIndex]);
+                isAxisEnabled[AxisIndex] = (isAxisEnabledD[AxisIndex] == 1);
                 // Update the button content
                 EnableYButton.Content = isAxisEnabled[AxisIndex] ? "Disable Y" : "Enable Y";
             }
@@ -202,7 +270,9 @@ namespace TipShaping
                 }
 
 
-                isAxisEnabled[AxisIndex] = !isAxisEnabled[AxisIndex];
+                //update one more time after action
+                trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.AXIS_ENABLE, AxisIndex, out isAxisEnabledD[AxisIndex]);
+                isAxisEnabled[AxisIndex] = (isAxisEnabledD[AxisIndex] == 1);
                 // Update the button content
                 EnableZButton.Content = isAxisEnabled[AxisIndex] ? "Disable Z" : "Enable Z";
             }
@@ -501,7 +571,7 @@ namespace TipShaping
                 if (axisName == "X") //X axis
                 {
                     
-                    trioMotionControl.Cancel(0, axisIndex);//.0 cancels the current move on the base axis, 1 cancels the buffered moves on the base axis.
+                    trioMotionControl.Cancel(2, axisIndex);//.2 cancels all move on the base axis, 1 cancels the buffered moves on the base axis.
 
                 }
                 else if (axisName == "L") //L axis
@@ -660,7 +730,6 @@ namespace TipShaping
         }
 
 
-
         private void ReverseButton_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             var moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
@@ -677,7 +746,7 @@ namespace TipShaping
                 if (axisName == "X") //X axis
                 {
 
-                    trioMotionControl.Cancel(0, axisIndex);//.0 cancels the current move on the base axis, 1 cancels the buffered moves on the base axis.
+                    trioMotionControl.Cancel(2, axisIndex);
 
                 }
                 else if (axisName == "L") //L axis
@@ -801,44 +870,6 @@ namespace TipShaping
 
 
 
-
-
-
-
-
-
-        // Update the UI to display the current X, Y, Z positions
-        private void UpdatePositionDisplay(string x, string y, string z)
-        {
-            if (double.TryParse(x, out double xValue))
-            {
-                SAMPosTextBox.Text = xValue.ToString("F3"); // Format with 3 decimal places
-            }
-            else
-            {
-                MessageBox.Show("Invalid X value. Please enter a valid number.");
-            }
-
-            if (double.TryParse(y, out double yValue))
-            {
-                SFMPosTextBox.Text = yValue.ToString("F3"); // Format with 3 decimal places
-            }
-            else
-            {
-                MessageBox.Show("Invalid Y value. Please enter a valid number.");
-            }
-
-            if (double.TryParse(z, out double zValue))
-            {
-                double result = zValue * 360;
-                LMPosTextBox.Text = result.ToString("F3"); // Format with 3 decimal places
-            }
-            else
-            {
-                MessageBox.Show("Invalid Z value. Please enter a valid number.");
-            }
-        }
-
         // Window closing event to stop monitoring
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -852,7 +883,8 @@ namespace TipShaping
         private void StopAllMotion_Click(object sender, RoutedEventArgs e)
         {
             trioMotionControl.RapidStop();//Stop X,Y and Z axis
-            stepperMotorControl.SendCommand("M410"); //Quickstop
+            if (stepperMotorControl.IsSerialPortOpen())
+            { stepperMotorControl.SendCommand("M410"); }//Quickstop
             
         }
 
@@ -1201,7 +1233,7 @@ namespace TipShaping
                 if (axisName == "Y" || axisName == "Z") //X axis
                 {
 
-                    trioMotionControl.Cancel(0, axisIndex);//.0 cancels the current move on the base axis, 1 cancels the buffered moves on the base axis.
+                    trioMotionControl.Cancel(2, axisIndex);
 
                 }
                 else if (axisName == "L") //L axis
@@ -1373,7 +1405,7 @@ namespace TipShaping
                 if (axisName == "Y" || axisName == "Z") //Y axis
                 {
 
-                    trioMotionControl.Cancel(0, axisIndex);//.0 cancels the current move on the base axis, 1 cancels the buffered moves on the base axis.
+                    trioMotionControl.Cancel(2, axisIndex);
 
                 }
                 else if (axisName == "L") //L axis

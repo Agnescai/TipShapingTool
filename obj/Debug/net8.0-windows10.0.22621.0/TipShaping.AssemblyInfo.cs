@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TipShaping")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+76be4658c4e04fc0fd0dfcc3e8efa37e19c57b61")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64f6f716ddc824770822f308f4afbcc801b10695")]
 [assembly: System.Reflection.AssemblyProductAttribute("TipShaping")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TipShaping")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
