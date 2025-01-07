@@ -8,6 +8,7 @@ using System.Windows;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Threading;
+using System.Threading;
 
 namespace TipShaping
 {
@@ -27,21 +28,100 @@ namespace TipShaping
         public delegate void MovingStatusUpdateHandler(bool Moving);
         public event MovingStatusUpdateHandler MovingStatusUpdated;
 
-
+        int num = 0;
+        Thread readThread;
         public StepperMotorControl( )
         {
             serialPort.DtrEnable = true;
             serialPort.RtsEnable = true;
 
-            serialPort.DataReceived += SerialPort_DataReceived;
+            //serialPort.DataReceived += SerialPort_DataReceived;
 
+            readThread = new Thread(Read);
+
+        }
+
+        public void Read()
+        {
+            while (true)
+            {
+                try
+                {
+                   
+                    // Read the line of data received from the serial port
+                    string data = serialPort.ReadLine().Trim();  // Trim any unnecessary whitespace or newline characters
+                    Debug.WriteLine($"Received Data: {data}");
+                    if (data.StartsWith("X:"))
+                    {
+                        // Regular expressions for X, Y, and Z values
+                        Regex regexX = new Regex(@"X:\s*(-?\d+(\.\d+)?)");
+                        Regex regexY = new Regex(@"Y:\s*(-?\d+(\.\d+)?)");
+                        Regex regexZ = new Regex(@"Z:\s*(-?\d+(\.\d+)?)");
+
+                        // Extract X, Y, and Z values
+                        float xValue = ExtractValue(regexX, data);
+                        float yValue = ExtractValue(regexY, data);
+                        float zValue = ExtractValue(regexZ, data);
+
+                        // Raise the PositionUpdated event on the main thread
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            PositionUpdated?.Invoke(xValue, yValue, zValue);
+                        });
+
+                        //Dispatcher.Invoke(() => UpdatePositionDisplay(xValue.ToString(), yValue.ToString(), zValue.ToString()));
+
+                        if (isInitial)
+                        {
+                            XlastPosition = xValue;
+                            YlastPosition = yValue;
+                            ZlastPosition = zValue;
+                            isInitial = false;
+                        }
+
+
+                        // Update the UI to show "Moving"
+                        if (HasSignificantMovement(xValue, XlastPosition, Threshold) ||
+                            HasSignificantMovement(yValue, YlastPosition, Threshold) ||
+                            HasSignificantMovement(zValue, ZlastPosition, Threshold))
+                        {
+                            // Update last known positions if significant movement is detected
+                            XlastPosition = xValue;
+                            YlastPosition = yValue;
+                            ZlastPosition = zValue;
+
+
+
+                            // Update the UI to show "Moving"
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                MovingStatusUpdated?.Invoke(true);
+                            });
+                            // Dispatcher.Invoke(() => UpdateStatusDisplay("Moving"));
+                        }
+                        else
+                        {
+                            // If no significant movement, show "Idle"
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                MovingStatusUpdated?.Invoke(false);
+                            });
+                            // Dispatcher.Invoke(() => UpdateStatusDisplay("Idle"));
+                        }
+
+                    }
+                }
+                catch (Exception)
+                { }
+            }
         }
         public void OpenSerialPort(string selectedPort, int baudRate)
         {
             serialPort.PortName = selectedPort;
             serialPort.BaudRate = baudRate;
             serialPort.Open();
-            StartMonitoringPosition(); //start monitoring the current position of the axes
+             _ = StartMonitoringPosition(); //start monitoring the current position of the axes
+            readThread.Start();
         }
         public void CloseSerialPort(string selectedPort)
         {
@@ -80,15 +160,18 @@ namespace TipShaping
             // Initialize and configure the timer
             timer = new System.Timers.Timer
             {
-                Interval = 200, // 100ms in milliseconds
+                Interval = 500, // 100ms in milliseconds
                 AutoReset = true // Ensures the timer triggers repeatedly
             };
 
             timer.Elapsed += (s, e) => SendCommand("M114 R");
+            
 
             // Start the timer
             timer.Start();
         }
+
+
 
         // Ensure the timer is disposed properly when no longer needed
         public void StopMonitoringPosition()
@@ -132,65 +215,65 @@ namespace TipShaping
             string data = serialPort.ReadLine().Trim();  // Trim any unnecessary whitespace or newline characters
             Debug.WriteLine($"Received Data: {data}");
 
-            if (data.StartsWith("X:"))
-            {
-                // Regular expressions for X, Y, and Z values
-                Regex regexX = new Regex(@"X:\s*(-?\d+(\.\d+)?)");
-                Regex regexY = new Regex(@"Y:\s*(-?\d+(\.\d+)?)");
-                Regex regexZ = new Regex(@"Z:\s*(-?\d+(\.\d+)?)");
+            //if (data.StartsWith("X:"))
+            //{
+            //    // Regular expressions for X, Y, and Z values
+            //    Regex regexX = new Regex(@"X:\s*(-?\d+(\.\d+)?)");
+            //    Regex regexY = new Regex(@"Y:\s*(-?\d+(\.\d+)?)");
+            //    Regex regexZ = new Regex(@"Z:\s*(-?\d+(\.\d+)?)");
 
-                // Extract X, Y, and Z values
-                float xValue = ExtractValue(regexX, data);
-                float yValue = ExtractValue(regexY, data);
-                float zValue = ExtractValue(regexZ, data);
+            //    // Extract X, Y, and Z values
+            //    float xValue = ExtractValue(regexX, data);
+            //    float yValue = ExtractValue(regexY, data);
+            //    float zValue = ExtractValue(regexZ, data);
 
-                // Raise the PositionUpdated event on the main thread
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    PositionUpdated?.Invoke(xValue, yValue, zValue);
-                });
+            //    // Raise the PositionUpdated event on the main thread
+            //    Application.Current.Dispatcher.Invoke(() =>
+            //    {
+            //        PositionUpdated?.Invoke(xValue, yValue, zValue);
+            //    });
 
-                //Dispatcher.Invoke(() => UpdatePositionDisplay(xValue.ToString(), yValue.ToString(), zValue.ToString()));
+            //    //Dispatcher.Invoke(() => UpdatePositionDisplay(xValue.ToString(), yValue.ToString(), zValue.ToString()));
 
-                if (isInitial)
-                {
-                    XlastPosition = xValue;
-                    YlastPosition = yValue;
-                    ZlastPosition = zValue;
-                    isInitial = false;
-                }
-
-
-                // Update the UI to show "Moving"
-                if (HasSignificantMovement(xValue, XlastPosition, Threshold) ||
-                    HasSignificantMovement(yValue, YlastPosition, Threshold) ||
-                    HasSignificantMovement(zValue, ZlastPosition, Threshold))
-                {
-                    // Update last known positions if significant movement is detected
-                    XlastPosition = xValue;
-                    YlastPosition = yValue;
-                    ZlastPosition = zValue;
+            //    if (isInitial)
+            //    {
+            //        XlastPosition = xValue;
+            //        YlastPosition = yValue;
+            //        ZlastPosition = zValue;
+            //        isInitial = false;
+            //    }
 
 
+            //    // Update the UI to show "Moving"
+            //    if (HasSignificantMovement(xValue, XlastPosition, Threshold) ||
+            //        HasSignificantMovement(yValue, YlastPosition, Threshold) ||
+            //        HasSignificantMovement(zValue, ZlastPosition, Threshold))
+            //    {
+            //        // Update last known positions if significant movement is detected
+            //        XlastPosition = xValue;
+            //        YlastPosition = yValue;
+            //        ZlastPosition = zValue;
 
-                    // Update the UI to show "Moving"
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        MovingStatusUpdated?.Invoke(true);
-                    });
-                    // Dispatcher.Invoke(() => UpdateStatusDisplay("Moving"));
-                }
-                else
-                {
-                    // If no significant movement, show "Idle"
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        MovingStatusUpdated?.Invoke(false);
-                    });
-                    // Dispatcher.Invoke(() => UpdateStatusDisplay("Idle"));
-                }
 
-            }
+
+            //        // Update the UI to show "Moving"
+            //        Application.Current.Dispatcher.Invoke(() =>
+            //        {
+            //            MovingStatusUpdated?.Invoke(true);
+            //        });
+            //        // Dispatcher.Invoke(() => UpdateStatusDisplay("Moving"));
+            //    }
+            //    else
+            //    {
+            //        // If no significant movement, show "Idle"
+            //        Application.Current.Dispatcher.Invoke(() =>
+            //        {
+            //            MovingStatusUpdated?.Invoke(false);
+            //        });
+            //        // Dispatcher.Invoke(() => UpdateStatusDisplay("Idle"));
+            //    }
+
+            //}
 
         }
 

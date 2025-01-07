@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
-      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\steppermotorcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:steppermotorcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
@@ -53,7 +53,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
@@ -64,18 +64,17 @@
               "ToolTip": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\MainWindow.xaml",
               "RelativeToolTip": "MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-11-20T07:55:55.646Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-20T07:55:55.646Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\MainWindow.xaml.cs",
               "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAALUAAAAAAAAAAAAmwMoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAL0AAAAALDMzMzP/v84AAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-20T07:55:58.978Z",
               "EditorCaption": ""
@@ -89,8 +88,7 @@
               "ToolTip": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\BigTechControllerConnection.xaml",
               "RelativeToolTip": "BigTechControllerConnection.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-28T23:50:04.721Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-28T23:50:04.721Z"
             },
             {
               "$type": "Document",
@@ -102,18 +100,17 @@
               "RelativeToolTip": "TrioMotionControl.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAewC8AAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-27T20:46:08.851Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-27T20:46:08.851Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "StepperMotorControl.cs",
               "DocumentMoniker": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\StepperMotorControl.cs",
               "RelativeDocumentMoniker": "StepperMotorControl.cs",
               "ToolTip": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\StepperMotorControl.cs",
               "RelativeToolTip": "StepperMotorControl.cs",
-              "ViewState": "AgIAALAAAAAAAAAAAAAAwKsAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAADUAAAAAAAAAAAAIwEwAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-03T23:40:05.349Z",
               "EditorCaption": ""
@@ -128,8 +125,7 @@
               "RelativeToolTip": "TrioControllerConnection.xaml.cs",
               "ViewState": "AgIAACQAAAAAAAAAAAAAADYAAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-29T01:32:13.406Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-29T01:32:13.406Z"
             },
             {
               "$type": "Document",
