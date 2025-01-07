@@ -24,6 +24,8 @@ using Windows.Storage.Streams;
 using TrioMotion.TrioPC_NET;
 using System.Net;
 using System.IO;
+using Windows.UI.Core;
+using static System.Net.WebRequestMethods;
 
 
 namespace TipShaping
@@ -38,19 +40,21 @@ namespace TipShaping
         private bool[] isAxisEnabled = { false, false, false, false, false, false };
         double[] isAxisEnabledD = { 0, 0, 0, 0, 0, 0 };
         double[] isDriveEnabledD = { 0, 0, 0, 0, 0, 0 };
-        string[] Max_Pos = { "105", "105", "20", "6", "14", "360000000" }; //forward travel limit SA,SF 13mm 30mm
-        string[] Min_Pos = { "-105", "-105", "-20", "-6", "-14", "-36000" }; //reverse travel limit
+        string[] Max_Pos = { "105", "105", "35", "6", "14", "36000" }; //forward travel limit SA,SF 13mm 30mm
+        string[] Min_Pos = { "-105", "-105", "-35", "-6", "-14", "-36000" }; //reverse travel limit
                                                                              //private string SAlastPosition = string.Empty;
                                                                              //private string SFlastPosition = string.Empty;
                                                                              //private string LlastPosition = string.Empty;
 
-
+        bool trioAllIdle = true; // Assume all axes are idle initially
+        bool bigTechAllIdle = true; // Assume all axes are idle initially
+        bool allIdle = true;
         private CameraSetting cameraSettingWindow;
         private BigTechControllerConnection bigTechControllerConnectionWindow;
         private TrioControllerConnection trioControllerConnectionWindow;
         private StepperMotorControl stepperMotorControl;
         private TrioMotionControl trioMotionControl;
-        private DispatcherTimer trioPositionUpdateTimer;
+        private DispatcherTimer allMovingStatusUpdateTimer;
 
         public MainWindow()
         {
@@ -71,13 +75,35 @@ namespace TipShaping
             trioMotionControl = new TrioMotionControl();
             trioMotionControl.TrioPositionUpdated += TrioUpdatePositions;
             trioMotionControl.TrioEnableButtonContentUpdated += InitialEnableButtons;
+
+            // Initialize the timer
+            allMovingStatusUpdateTimer = new DispatcherTimer();
+            allMovingStatusUpdateTimer.Interval = TimeSpan.FromMilliseconds(100); // Set interval to 100 ms
+            allMovingStatusUpdateTimer.Tick += UpdateAllAxisStatus; // Attach the Tick event handler
+            allMovingStatusUpdateTimer.Start(); // Start the timer
+
+
+        }
+
+        private void UpdateAllAxisStatus(object sender, EventArgs e)
+        {
+            allIdle= bigTechAllIdle && trioAllIdle;
+            if (!allIdle)
+            {
+                AxisStatus.Text = "Moving";
+            }
+            else
+            { AxisStatus.Text = "Idle"; }
+            allIdle = true;//rest
+            bigTechAllIdle = true;//rest
+            trioAllIdle = true;//rest
         }
 
         private void InitialEnableButtons(double[] enableValue)
         {
-            EnableXButton.Content = enableValue[1] == 0 ? "Enable X" : "Disenable X";
-            EnableYButton.Content = enableValue[0] == 0 ? "Enable Y" : "Disenable Y";
-            EnableZButton.Content = enableValue[2] == 0 ? "Enable Z" : "Disenable Z";
+            EnableXButton.Content = enableValue[1] == 0 ? "Enable X" : "Disable X";
+            EnableYButton.Content = enableValue[0] == 0 ? "Enable Y" : "Disable Y";
+            EnableZButton.Content = enableValue[2] == 0 ? "Enable Z" : "Disable Z";
         }
 
 
@@ -87,31 +113,76 @@ namespace TipShaping
             double XMPos = y;
             double YMPos = x;
             double ZMPos = z;
+
             try
             {
                 // Fetch the measured positions
                
-                        XMPosTextBox.Text = XMPos.ToString("F3");
-                        YMPosTextBox.Text = YMPos.ToString("F3");
-                        ZMPosTextBox.Text = ZMPos.ToString("F3");
+                XMPosTextBox.Text = XMPos.ToString("F3");
+                YMPosTextBox.Text = YMPos.ToString("F3");
+                ZMPosTextBox.Text = ZMPos.ToString("F3");
 
                 if (AxisSelection.SelectedItem != null)
                 {
-                    string selectedAxis = AxisSelection.SelectedItem.ToString();
+                    string selectedAxis = (AxisSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+                    string moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+
                     if (selectedAxis == "XY") // 0: Y, 1: X
                     {
-                        ReverseRestTravelTextBlock.Text = Math.Abs(double.Parse(Min_Pos[1]) - XMPos).ToString("F3");
-                        ForwardRestTravelTextBlock.Text = Math.Abs(double.Parse(Max_Pos[1]) - XMPos).ToString("F3");
-                        UpRestTravelTextBlock.Text = Math.Abs(double.Parse(Max_Pos[0]) - YMPos).ToString("F3");
-                        DownRestTravelTextBlock.Text = Math.Abs(double.Parse(Min_Pos[0]) - YMPos).ToString("F3");
+                        if (moveType =="Absolute Move")
+                        {
+                            //ReverseRestTravelTextBlock.Text = $"{Min_Pos[1]:F3}";
+                            ForwardRestTravelTextBlock.Text = $"({Min_Pos[1]:F3}, {Max_Pos[1]:F3})";
+                            UpRestTravelTextBlock.Text = $"({Min_Pos[0]:F3}, {Max_Pos[0]:F3})";
+                            //DownRestTravelTextBlock.Text = $"{Min_Pos[0]:F3}";
+
+                        }
+                        else
+                        {
+                            ReverseRestTravelTextBlock.Text = Math.Abs(double.Parse(Min_Pos[1]) - XMPos).ToString("F3");
+                            ForwardRestTravelTextBlock.Text = Math.Abs(double.Parse(Max_Pos[1]) - XMPos).ToString("F3");
+                            UpRestTravelTextBlock.Text = Math.Abs(double.Parse(Max_Pos[0]) - YMPos).ToString("F3");
+                            DownRestTravelTextBlock.Text = Math.Abs(double.Parse(Min_Pos[0]) - YMPos).ToString("F3");
+
+                        }
+
                     }
                     else if (selectedAxis == "Z")
                     {
-                        UpRestTravelTextBlock.Text =Math.Abs(double.Parse(Max_Pos[2]) - ZMPos).ToString("F3");
-                        DownRestTravelTextBlock.Text = Math.Abs(double.Parse(Min_Pos[2]) - ZMPos).ToString("F3");
+                        if (moveType == "Absolute Move")
+                        {
+                            UpRestTravelTextBlock.Text = $"({Min_Pos[2]:F3}, {Max_Pos[2]:F3})";
+                            //DownRestTravelTextBlock.Text = $"{Min_Pos[2]:F3}";
+                        }
+                        else
+                        {                          
+                            UpRestTravelTextBlock.Text = Math.Abs(double.Parse(Max_Pos[2]) - YMPos).ToString("F3");
+                            DownRestTravelTextBlock.Text = Math.Abs(double.Parse(Min_Pos[2]) - YMPos).ToString("F3");
+                        }
+                                              
+
                     }
                 }
 
+                trioAllIdle = true; // Assume all axes are idle initially
+                double[] IfIdle = new double[3];
+                
+                for (int i = 0;i<3;i++)
+                {
+                    IfIdle[i] = 1;
+                   
+                    trioMotionControl.GetAxisParameter(AxisParameter.IDLE, i, out IfIdle[i]);
+                    if (IfIdle[i] == 0)
+                    {
+                        trioAllIdle = false;
+                    }
+                    //Debug.Print($"IfIdle axis {i}:{IfIdle[i]}");
+                    // Update AxisStatus.Text based on IfIdle
+                }
+
+                // Update AxisStatus based on the status of all axes
+               // AxisStatus.Text = allIdle ? "Idle" : "Moving";
+                //Debug.Print($"Overall Status: {AxisStatus.Text}");
             }
             catch (Exception ex)
             {
@@ -127,40 +198,78 @@ namespace TipShaping
             // Update the UI
             SAMPosTextBox.Text = $"{x:F3}";
             SFMPosTextBox.Text = $"{y:F3}";
-            LMPosTextBox.Text = $"{z:F3}";
+            double zDeg = z * 360;
+            LMPosTextBox.Text = $"{zDeg:F3}";
+
+
 
             if (AxisSelection.SelectedItem != null)
             {
-                string selectedAxis = AxisSelection.SelectedItem.ToString();
+                string selectedAxis = (AxisSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+                var moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
                 if (selectedAxis == "SA")
                 { 
+                    if(moveType == "Absolute Move")
+                    {
+                        UpRestTravelTextBlock.Text = $"({Min_Pos[3]:F3}, {Max_Pos[3]:F3})";
+                        //DownRestTravelTextBlock.Text = $"{Min_Pos[3]:F3}";
+                    }
+                    else
+                    {
+                        UpRestTravelTextBlock.Text = Math.Abs(float.Parse(Max_Pos[3]) - x).ToString("F3");
+                        DownRestTravelTextBlock.Text = Math.Abs(float.Parse(Min_Pos[3]) - x).ToString("F3");
+                    }
                     
-                    UpRestTravelTextBlock.Text = Math.Abs(float.Parse(Max_Pos[3]) - x).ToString("F3");
-                    DownRestTravelTextBlock.Text = Math.Abs(float.Parse(Min_Pos[3]) - x).ToString("F3");
+                   
                 }
                 else if (selectedAxis == "SF")
                 {
-                    UpRestTravelTextBlock.Text = Math.Abs(float.Parse(Max_Pos[4]) - y).ToString("F3");
-                    DownRestTravelTextBlock.Text = Math.Abs(float.Parse(Min_Pos[4]) - y).ToString("F3");
-                } else if (selectedAxis == "L")
+                    if (moveType == "Absolute Move")
+                    {
+                        UpRestTravelTextBlock.Text = $"({Min_Pos[4]:F3}, {Max_Pos[4]:F3})";
+                        //DownRestTravelTextBlock.Text = $"{Min_Pos[4]:F3}";
+                    }
+                    else
+                    {
+                        UpRestTravelTextBlock.Text = Math.Abs(float.Parse(Max_Pos[4]) - y).ToString("F3");
+                        DownRestTravelTextBlock.Text = Math.Abs(float.Parse(Min_Pos[4]) - y).ToString("F3");
+                    }
+
+                   
+                } 
+                else if (selectedAxis == "L")
                 {
-                    UpRestTravelTextBlock.Text = Math.Abs(float.Parse(Max_Pos[5]) - z).ToString("F3");
-                    DownRestTravelTextBlock.Text = Math.Abs(float.Parse(Min_Pos[5]) - z).ToString("F3");
+                    //if (moveType == "Absolute Move")
+                    //{
+                    //    ForwardRestTravelTextBlock.Text = $"{Max_Pos[5]:F3}";
+                    //    ReverseRestTravelTextBlock.Text = $"{Min_Pos[5]:F3}";
+                    //}
+                    //else
+                    //{
+                    //    ForwardRestTravelTextBlock.Text = Math.Abs(float.Parse(Max_Pos[5]) - z).ToString("F3");
+                    //    ReverseRestTravelTextBlock.Text = Math.Abs(float.Parse(Min_Pos[5]) - z).ToString("F3");
+                    //}
+
+                    //ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                    //ForwardRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                    //UpRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                    //DownRestTravelTextBlock.Visibility = Visibility.Collapsed;
                 }
             }
         }
         private void StepperMotorOnMovingStatusUpdated(bool Moving)
         {
             // Update the UI
-            if (Moving)
-            {
-                AxisStatus.Text = "Moving";
-            }
-            else
-            { AxisStatus.Text = "Idle"; }
+           bigTechAllIdle = !Moving;
+            
+            //if (!allIdle)
+            //{
+            //    AxisStatus.Text = "Moving";
+            //}
+            //else
+            //{ AxisStatus.Text = "Idle"; }
 
         }
-
 
 
 
@@ -464,68 +573,104 @@ namespace TipShaping
 
                 if (axisName == "X")// trio
                 {
-   
-                    double distanceValue = double.Parse(distance);
-                    // Prepare parameters for the MoveRel function
-                    double[] distances = new double[1] { distanceValue }; // Distance array for relative move
-                    int baseAxis = axisIndex;                            // Base axis for movement
-                    double velocityValue = double.Parse(velocity);
-                    //Debug.Print($"velocity:{velocity}");
-                    double Accel = 1000;
-                    double Decel = 1000;
-                    double Jerk = 2000;
-                    trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
-                    Debug.Print("Set Motion successfully.");
-
-                    if (moveType == "Jog")
+                    double IfIDLE = 0;
+                    trioMotionControl.GetAxisParameter(AxisParameter.IDLE, axisIndex, out IfIDLE);
+                    if(IfIDLE !=0)
                     {
-                        //trioMotionControl.Base();
-                        bool JogSuccessful = trioMotionControl.Forward(baseAxis);
-                        if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
-                        else { Debug.Print("JogSuccessful: 0"); }
-                    }
+                        int baseAxis = axisIndex;                            // Base axis for movement
+                        double velocityValue = double.Parse(velocity);
+                        //Debug.Print($"velocity:{velocity}");
+                        double Accel = 1000;
+                        double Decel = 1000;
+                        double Jerk = 2000;
 
-                    if (moveType == "Relative Move")
-                    {
-                        Debug.Print("Enter relative move");
-                        try
+                        trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
+                        Debug.Print("Set Motion successfully.");
+
+                        if (moveType == "Jog")
                         {
-                            // Call MoveRel
-                            bool success = trioMotionControl.MoveRel(distances, baseAxis);
+                            //trioMotionControl.Base();
 
-                            if (success)
-                            {
-                                Console.WriteLine("Relative move on X axis completed successfully.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Relative move on X axis failed.");
-                            }
-                        }
-                        catch(Exception ex) { Debug.Print(axisName + ": " + ex.ToString()); }
-
-
-                    }
-
-                    if (moveType == "Absolute Move")
-                    {
-                        // Call MoveAbs
-                        bool success = trioMotionControl.MoveAbs(distances, baseAxis);
-
-                        if (success)
-                        {
-                            Console.WriteLine("Relative move on X axis completed successfully.");
+                            bool JogSuccessful = trioMotionControl.Forward(baseAxis);
+                            if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
+                            else { Debug.Print("JogSuccessful: 0"); }
                         }
                         else
                         {
-                            Console.WriteLine("Relative move on X axis failed.");
+                            double distanceValue = double.Parse(distance);
+                            // Prepare parameters for the MoveRel function
+                            double[] distances = new double[1] { distanceValue }; // Distance array for relative move
+                            double AxisPos;
+
+                            trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.MPOS, axisIndex, out AxisPos);
+
+                            if (moveType == "Relative Move")
+                            {
+                                double targetPos = distances[0] + AxisPos;
+                                if (targetPos > double.Parse(Min_Pos[axisIndex]) && targetPos < double.Parse(Max_Pos[axisIndex]))
+                                {
+
+                                    try
+                                    {
+                                        // Call MoveRel
+                                        bool success = trioMotionControl.MoveRel(distances, baseAxis);
+
+                                        if (success)
+                                        {
+                                            Console.WriteLine("Relative move on X axis completed successfully.");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Relative move on X axis failed.");
+                                        }
+                                    }
+                                    catch (Exception ex) { Debug.Print(axisName + ": " + ex.ToString()); }
+
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Target position is out of travel limit!");
+                                    return;
+                                }
+
+
+                            }
+
+                            if (moveType == "Absolute Move")
+                            {
+                                double targetPos = distances[0];
+                                if (targetPos > double.Parse(Min_Pos[axisIndex]) && targetPos < double.Parse(Max_Pos[axisIndex]))
+                                {
+                                    // Call MoveAbs
+                                    bool success = trioMotionControl.MoveAbs(distances, baseAxis);
+
+                                    if (success)
+                                    {
+                                        Console.WriteLine("Relative move on X axis completed successfully.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Relative move on X axis failed.");
+                                    }
+
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Target position is out of travel limit!");
+                                    return;
+                                }
+
+                            }
+
                         }
 
                     }
+                    else
+                    {
+                        MessageBox.Show($"Axis {axisIndex} is still Moving. Wait for idle.");
+                    }
 
                 }
-
-
 
 
                 if (axisName == "L")
@@ -644,64 +789,106 @@ namespace TipShaping
 
                 if (axisName == "X")// trio
                 {
-                   
-                   
-                    double distanceValue = double.Parse(distance);
-                    // Prepare parameters for the MoveRel function
-                    double[] distances = new double[1] { distanceValue }; // Distance array for relative move
-                    int baseAxis = axisIndex;                            // Base axis for movement
-                    double velocityValue = double.Parse(velocity);
-                    double Accel = 1000;
-                    double Decel = 1000;
-                    double Jerk = 2000;
-                    trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
-
-                    if (moveType == "Jog")
+                    double IfIDLE = 0;
+                    trioMotionControl.GetAxisParameter(AxisParameter.IDLE, axisIndex, out IfIDLE);
+                    if (IfIDLE != 0)
                     {
-                        //trioMotionControl.Base();
-                        bool JogSuccessful = trioMotionControl.Reverse(baseAxis);
-                        if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
-                        else { Debug.Print("JogSuccessful: 0"); }
-                    }
+                        int baseAxis = axisIndex;                            // Base axis for movement
+                        double velocityValue = double.Parse(velocity);
+                        double Accel = 1000;
+                        double Decel = 1000;
+                        double Jerk = 2000;
+                        trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
 
-                    if (moveType == "Relative Move")
-                    {
-
-                        // Call MoveRel
-                        // Negate each element in the array
-                        for (int i = 0; i < distances.Length; i++)
+                        if (moveType == "Jog")
                         {
-                            distances[i] = -distances[i];
-                        }
-
-                        bool success = trioMotionControl.MoveRel(distances, baseAxis);
-
-                        if (success)
-                        {
-                            Console.WriteLine("Relative move on X axis completed successfully.");
+                            //trioMotionControl.Base();
+                            bool JogSuccessful = trioMotionControl.Reverse(baseAxis);
+                            if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
+                            else { Debug.Print("JogSuccessful: 0"); }
                         }
                         else
                         {
-                            Console.WriteLine("Relative move on X axis failed.");
+
+                            double distanceValue = double.Parse(distance);
+                            // Prepare parameters for the MoveRel function
+                            double[] distances = new double[1] { distanceValue }; // Distance array for relative move
+                            double AxisPos;
+                            trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.MPOS, axisIndex, out AxisPos);
+
+
+                            if (moveType == "Relative Move")
+                            {
+                                for (int i = 0; i < distances.Length; i++)
+                                {
+                                    distances[i] = -distances[i];
+                                }
+
+                                double targetPos = distances[0] + AxisPos;
+                                if (targetPos > double.Parse(Min_Pos[axisIndex]) && targetPos < double.Parse(Max_Pos[axisIndex]))
+                                {
+                                    // Call MoveRel
+                                    // Negate each element in the array
+
+
+                                    bool success = trioMotionControl.MoveRel(distances, baseAxis);
+
+                                    if (success)
+                                    {
+                                        Console.WriteLine("Relative move on X axis completed successfully.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Relative move on X axis failed.");
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Target position is out of travel limit!");
+                                    return;
+                                }
+
+
+                            }
+
+                            if (moveType == "Absolute Move")
+                            {
+                                double targetPos = distances[0];
+                                if (targetPos > double.Parse(Min_Pos[axisIndex]) && targetPos < double.Parse(Max_Pos[axisIndex]))
+                                {
+                                    // Call MoveAbs
+                                    bool success = trioMotionControl.MoveAbs(distances, baseAxis);
+
+                                    if (success)
+                                    {
+                                        Console.WriteLine("Relative move on X axis completed successfully.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Relative move on X axis failed.");
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Target position is out of travel limit!");
+                                    return;
+                                }
+
+                            }
+
+
                         }
-
                     }
-
-                    if (moveType == "Absolute Move")
+                    else
                     {
-                        // Call MoveAbs
-                        bool success = trioMotionControl.MoveAbs(distances, baseAxis);
-
-                        if (success)
-                        {
-                            Console.WriteLine("Relative move on X axis completed successfully.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Relative move on X axis failed.");
-                        }
-
+                        MessageBox.Show($"Axis {axisIndex} is still Moving. Wait for idle.");
                     }
+
+
+                   
+                    
+
+                   
 
                 }
 
@@ -868,6 +1055,7 @@ namespace TipShaping
                 while (AxisStatus.Text == "Moving")
                 {
                     //wait
+                    Debug.Print("in wait for Idle.");
                 }
                 stepperMotorControl.SendCommand("G92 Z0");
             }
@@ -904,10 +1092,12 @@ namespace TipShaping
             }
 
             HandleRotationButtonsVisibility();
-            handleMoveButtonsVisibility();
+            handleMoveButtonsAndRestTravelTextBlockVisibility(); 
+
         }
-        private void handleMoveButtonsVisibility()
+        private void handleMoveButtonsAndRestTravelTextBlockVisibility()
         {
+            string moveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
             // Hide all buttons by default
             UpButton.Visibility = Visibility.Collapsed;
             DownButton.Visibility = Visibility.Collapsed;
@@ -918,6 +1108,11 @@ namespace TipShaping
             DownLeftButton.Visibility = Visibility.Collapsed;
             DownRightButton.Visibility = Visibility.Collapsed;
 
+            ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+            ForwardRestTravelTextBlock.Visibility = Visibility.Collapsed;
+            UpRestTravelTextBlock.Visibility = Visibility.Collapsed;
+            DownRestTravelTextBlock.Visibility = Visibility.Collapsed;
+
             if (AxisSelection.SelectedItem is ComboBoxItem axisItem)
             {
                 string axis = axisItem.Content.ToString();
@@ -926,28 +1121,182 @@ namespace TipShaping
                 {
                     case "XY":
                         // Show all movement buttons for XY
-                        UpButton.Visibility = Visibility.Visible;
-                        DownButton.Visibility = Visibility.Visible;
-                        ForwardButton.Visibility = Visibility.Visible;
-                        ReverseButton.Visibility = Visibility.Visible;
-                        UpLeftButton.Visibility = Visibility.Visible;
-                        UpRightButton.Visibility = Visibility.Visible;
-                        DownLeftButton.Visibility = Visibility.Visible;
-                        DownRightButton.Visibility = Visibility.Visible;
+
+
+                        if (MoveTypeSelection.SelectedItem == null)
+                        {
+                            UpButton.Visibility = Visibility.Visible;
+                            DownButton.Visibility = Visibility.Visible;
+                            ForwardButton.Visibility = Visibility.Visible;
+                            ReverseButton.Visibility = Visibility.Visible;
+                            UpLeftButton.Visibility = Visibility.Visible;
+                            UpRightButton.Visibility = Visibility.Visible;
+                            DownLeftButton.Visibility = Visibility.Visible;
+                            DownRightButton.Visibility = Visibility.Visible;
+
+                            UpRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            DownRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ForwardRestTravelTextBlock.Visibility = Visibility.Collapsed;
+
+                        }
+                        if (moveType == "Relative Move" || moveType == "Jog")
+                        {
+                            ReverseRestTravelTextBlock.Visibility = Visibility.Visible;
+                            ForwardRestTravelTextBlock.Visibility = Visibility.Visible;
+                            UpRestTravelTextBlock.Visibility = Visibility.Visible;
+                            DownRestTravelTextBlock.Visibility = Visibility.Visible;
+
+                            UpButton.Visibility = Visibility.Visible;
+                            DownButton.Visibility = Visibility.Visible;
+                            ForwardButton.Visibility = Visibility.Visible;
+                            ReverseButton.Visibility = Visibility.Visible;
+                            UpLeftButton.Visibility = Visibility.Visible;
+                            UpRightButton.Visibility = Visibility.Visible;
+                            DownLeftButton.Visibility = Visibility.Visible;
+                            DownRightButton.Visibility = Visibility.Visible;
+
+                        }
+
+                        if (moveType == "Absolute Move")
+                        {
+                            ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ForwardRestTravelTextBlock.Visibility = Visibility.Visible;
+                            UpRestTravelTextBlock.Visibility = Visibility.Visible;
+                            DownRestTravelTextBlock.Visibility = Visibility.Collapsed;
+
+                            UpButton.Visibility = Visibility.Visible;
+                            DownButton.Visibility = Visibility.Collapsed;
+                            ForwardButton.Visibility = Visibility.Visible;
+                            ReverseButton.Visibility = Visibility.Collapsed;
+                            UpLeftButton.Visibility = Visibility.Collapsed;
+                            UpRightButton.Visibility = Visibility.Collapsed;
+                            DownLeftButton.Visibility = Visibility.Collapsed;
+                            DownRightButton.Visibility = Visibility.Collapsed;
+                        }
+
+
                         break;
 
                     case "Z":
                     case "SA":
                     case "SF":
+
                         // Show only up and down buttons for Z, SA, SF
-                        UpButton.Visibility = Visibility.Visible;
-                        DownButton.Visibility = Visibility.Visible;
+                        //UpButton.Visibility = Visibility.Visible;
+                        //DownButton.Visibility = Visibility.Visible;
+
+                        if (MoveTypeSelection.SelectedItem == null)
+                        {
+                            UpRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            DownRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ForwardRestTravelTextBlock.Visibility = Visibility.Collapsed;
+
+                            UpButton.Visibility = Visibility.Visible;
+                            DownButton.Visibility = Visibility.Visible;
+                            ForwardButton.Visibility = Visibility.Collapsed;
+                            ReverseButton.Visibility = Visibility.Collapsed;
+                            UpLeftButton.Visibility = Visibility.Collapsed;
+                            UpRightButton.Visibility = Visibility.Collapsed;
+                            DownLeftButton.Visibility = Visibility.Collapsed;
+                            DownRightButton.Visibility = Visibility.Collapsed;
+
+
+                        }
+                        if (moveType == "Relative Move" || moveType == "Jog")
+                        {
+                            ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ForwardRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            UpRestTravelTextBlock.Visibility = Visibility.Visible;
+                            DownRestTravelTextBlock.Visibility = Visibility.Visible;
+
+                            UpButton.Visibility = Visibility.Visible;
+                            DownButton.Visibility = Visibility.Visible;
+                            ForwardButton.Visibility = Visibility.Collapsed;
+                            ReverseButton.Visibility = Visibility.Collapsed;
+                            UpLeftButton.Visibility = Visibility.Collapsed;
+                            UpRightButton.Visibility = Visibility.Collapsed;
+                            DownLeftButton.Visibility = Visibility.Collapsed;
+                            DownRightButton.Visibility = Visibility.Collapsed;
+
+                        }
+
+                        if (moveType == "Absolute Move")
+                        {
+                            ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ForwardRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            UpRestTravelTextBlock.Visibility = Visibility.Visible;
+                            DownRestTravelTextBlock.Visibility = Visibility.Collapsed;
+
+                            UpButton.Visibility = Visibility.Visible;
+                            DownButton.Visibility = Visibility.Collapsed;
+                            ForwardButton.Visibility = Visibility.Collapsed;
+                            ReverseButton.Visibility = Visibility.Collapsed;
+                            UpLeftButton.Visibility = Visibility.Collapsed;
+                            UpRightButton.Visibility = Visibility.Collapsed;
+                            DownLeftButton.Visibility = Visibility.Collapsed;
+                            DownRightButton.Visibility = Visibility.Collapsed;
+                        }
+
+
                         break;
 
                     case "L":
-                        // Show only forward and reverse buttons for L
-                        ForwardButton.Visibility = Visibility.Visible;
-                        ReverseButton.Visibility = Visibility.Visible;
+
+                        if (MoveTypeSelection.SelectedItem == null)
+                        {
+                            UpRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            DownRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ForwardRestTravelTextBlock.Visibility = Visibility.Collapsed;
+
+                            UpButton.Visibility = Visibility.Collapsed;
+                            DownButton.Visibility = Visibility.Collapsed;
+                            ForwardButton.Visibility = Visibility.Visible;
+                            ReverseButton.Visibility = Visibility.Visible;
+                            UpLeftButton.Visibility = Visibility.Collapsed;
+                            UpRightButton.Visibility = Visibility.Collapsed;
+                            DownLeftButton.Visibility = Visibility.Collapsed;
+                            DownRightButton.Visibility = Visibility.Collapsed;
+                        }
+                        if (moveType == "Relative Move" || moveType == "Jog")
+                        {
+                            ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ForwardRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            UpRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            DownRestTravelTextBlock.Visibility = Visibility.Collapsed;
+
+                            UpButton.Visibility = Visibility.Collapsed;
+                            DownButton.Visibility = Visibility.Collapsed;
+                            ForwardButton.Visibility = Visibility.Visible;
+                            ReverseButton.Visibility = Visibility.Visible;
+                            UpLeftButton.Visibility = Visibility.Collapsed;
+                            UpRightButton.Visibility = Visibility.Collapsed;
+                            DownLeftButton.Visibility = Visibility.Collapsed;
+                            DownRightButton.Visibility = Visibility.Collapsed;
+
+                        }
+                        if (moveType == "Absolute Move")
+                        {
+                            ReverseRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            ForwardRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            UpRestTravelTextBlock.Visibility = Visibility.Collapsed;
+                            DownRestTravelTextBlock.Visibility = Visibility.Collapsed;
+
+                            UpButton.Visibility = Visibility.Collapsed;
+                            DownButton.Visibility = Visibility.Collapsed;
+                            ForwardButton.Visibility = Visibility.Visible;
+                            ReverseButton.Visibility = Visibility.Collapsed;
+                            UpLeftButton.Visibility = Visibility.Collapsed;
+                            UpRightButton.Visibility = Visibility.Collapsed;
+                            DownLeftButton.Visibility = Visibility.Collapsed;
+                            DownRightButton.Visibility = Visibility.Collapsed;
+                        }
+
+
+
+
                         break;
                 }
             }
@@ -967,8 +1316,11 @@ namespace TipShaping
         private void MoveTypeSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             HandleRotationButtonsVisibility();
+         
+            handleMoveButtonsAndRestTravelTextBlockVisibility();
         }
 
+       
         private void HandleRotationButtonsVisibility()
         {
             bool isAxisL = AxisSelection.SelectedItem is ComboBoxItem axisItem && axisItem.Content.ToString() == "L";
@@ -1138,63 +1490,96 @@ namespace TipShaping
 
                 if (axisName == "Y" || axisName == "Z")// trio
                 {
-                   
-                    double distanceValue = double.Parse(distance);
-                    // Prepare parameters for the MoveRel function
-                    double[] distances = new double[1] { distanceValue }; // Distance array for relative move
-                    int baseAxis = axisIndex;                            // Base axis for movement
-                    double velocityValue = double.Parse(velocity);
-                    double Accel = 1000;
-                    double Decel = 1000;
-                    double Jerk = 2000;
-                    trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
-
-                    if (moveType == "Jog")
+                    double IfIDLE = 0;
+                    trioMotionControl.GetAxisParameter(AxisParameter.IDLE, axisIndex, out IfIDLE);
+                    if (IfIDLE != 0)
                     {
-                        //trioMotionControl.Base();
-                        bool JogSuccessful = trioMotionControl.Forward(baseAxis);
-                        if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
-                        else { Debug.Print("JogSuccessful: 0"); }
-                    }
+                        int baseAxis = axisIndex;                            // Base axis for movement
+                        double velocityValue = double.Parse(velocity);
+                        double Accel = 1000;
+                        double Decel = 1000;
+                        double Jerk = 2000;
+                        trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
 
-                    if (moveType == "Relative Move")
-                    {
-
-                        // Call MoveRel
-                        bool success = trioMotionControl.MoveRel(distances, baseAxis);
-
-                        if (success)
+                        if (moveType == "Jog")
                         {
-                            Console.WriteLine("Relative move completed successfully.");
+                            //trioMotionControl.Base();
+                            bool JogSuccessful = trioMotionControl.Forward(baseAxis);
+                            if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
+                            else { Debug.Print("JogSuccessful: 0"); }
                         }
                         else
                         {
-                            Console.WriteLine("Relative move failed.");
+                            double distanceValue = double.Parse(distance);
+                            // Prepare parameters for the MoveRel function
+                            double[] distances = new double[1] { distanceValue }; // Distance array for relative move
+                            double AxisPos;
+                            trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.MPOS, axisIndex, out AxisPos);
+
+
+
+                            if (moveType == "Relative Move")
+                            {
+                                double targetPos = distances[0] + AxisPos;
+                                if (targetPos > double.Parse(Min_Pos[axisIndex]) && targetPos < double.Parse(Max_Pos[axisIndex]))
+                                {
+                                    // Call MoveRel
+                                    bool success = trioMotionControl.MoveRel(distances, baseAxis);
+
+                                    if (success)
+                                    {
+                                        Console.WriteLine("Relative move completed successfully.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Relative move failed.");
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Target position is out of travel limit!");
+                                    return;
+                                }
+
+
+                            }
+
+                            if (moveType == "Absolute Move")
+                            {
+                                double targetPos = distances[0];
+                                if (targetPos > double.Parse(Min_Pos[axisIndex]) && targetPos < double.Parse(Max_Pos[axisIndex]))
+                                {
+                                    // Call MoveAbs
+                                    bool success = trioMotionControl.MoveAbs(distances, baseAxis);
+
+                                    if (success)
+                                    {
+                                        Console.WriteLine("Relative move completed successfully.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Relative move failed.");
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Target position is out of travel limit!");
+                                    return;
+                                }
+
+                            }
+
                         }
 
                     }
-
-                    if (moveType == "Absolute Move")
+                    else
                     {
-                        // Call MoveAbs
-                        bool success = trioMotionControl.MoveAbs(distances, baseAxis);
-
-                        if (success)
-                        {
-                            Console.WriteLine("Relative move completed successfully.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Relative move failed.");
-                        }
-
+                        MessageBox.Show($"Axis {axisIndex} is still Moving. Wait for idle.");
                     }
 
+                    
 
                 }//if axis is Y or Z
-
-
-
 
 
 
@@ -1309,64 +1694,100 @@ namespace TipShaping
 
                 if (axisName == "Y" || axisName == "Z")// trio
                 {
-
-
-                    double distanceValue = double.Parse(distance);
-                    // Prepare parameters for the MoveRel function
-                    double[] distances = new double[1] { distanceValue }; // Distance array for relative move
-                    int baseAxis = axisIndex;                            // Base axis for movement
-                    double velocityValue = double.Parse(velocity);
-                    double Accel = 1000;
-                    double Decel = 1000;
-                    double Jerk = 2000;
-                    trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
-
-                    if (moveType == "Jog")
+                    double IfIDLE = 0;
+                    trioMotionControl.GetAxisParameter(AxisParameter.IDLE, axisIndex, out IfIDLE);
+                    if (IfIDLE != 0)
                     {
-                        //trioMotionControl.Base();
-                        bool JogSuccessful = trioMotionControl.Reverse(baseAxis);
-                        if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
-                        else { Debug.Print("JogSuccessful: 0"); }
-                    }
+                        int baseAxis = axisIndex;                            // Base axis for movement
+                        double velocityValue = double.Parse(velocity);
+                        double Accel = 1000;
+                        double Decel = 1000;
+                        double Jerk = 2000;
+                        trioMotionControl.SetMotion(baseAxis, velocityValue, Accel, Decel, Jerk);//can also set Accel, Decel, Jerk
 
-                    if (moveType == "Relative Move")
-                    {
-
-                        // Call MoveRel
-                        // Negate each element in the array
-                        for (int i = 0; i < distances.Length; i++)
+                        if (moveType == "Jog")
                         {
-                            distances[i] = -distances[i];
-                        }
-
-                        bool success = trioMotionControl.MoveRel(distances, baseAxis);
-
-                        if (success)
-                        {
-                            Console.WriteLine("Relative move  completed successfully.");
+                            //trioMotionControl.Base();
+                            bool JogSuccessful = trioMotionControl.Reverse(baseAxis);
+                            if (JogSuccessful) { Debug.Print("JogSuccessful: 1"); }
+                            else { Debug.Print("JogSuccessful: 0"); }
                         }
                         else
                         {
-                            Console.WriteLine("Relative move  failed.");
+                            double distanceValue = double.Parse(distance);
+                            // Prepare parameters for the MoveRel function
+                            double[] distances = new double[1] { distanceValue }; // Distance array for relative move
+                            double AxisPos;
+                            trioMotionControl.GetAxisParameter(TrioMotion.TrioPC_NET.AxisParameter.MPOS, axisIndex, out AxisPos);
+
+
+                            if (moveType == "Relative Move")
+                            {
+
+                                // Call MoveRel
+                                // Negate each element in the array
+                                for (int i = 0; i < distances.Length; i++)
+                                {
+                                    distances[i] = -distances[i];
+                                }
+
+                                double targetPos = distances[0] + AxisPos;
+                                if (targetPos > double.Parse(Min_Pos[axisIndex]) && targetPos < double.Parse(Max_Pos[axisIndex]))
+                                {
+                                    bool success = trioMotionControl.MoveRel(distances, baseAxis);
+
+                                    if (success)
+                                    {
+                                        Console.WriteLine("Relative move  completed successfully.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Relative move  failed.");
+                                    }
+
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Target position is out of travel limit!");
+                                    return;
+                                }
+
+
+                            }
+
+                            if (moveType == "Absolute Move")
+                            {
+                                double targetPos = distances[0];
+                                if (targetPos > double.Parse(Min_Pos[axisIndex]) && targetPos < double.Parse(Max_Pos[axisIndex]))
+                                {
+                                    // Call MoveAbs
+                                    bool success = trioMotionControl.MoveAbs(distances, baseAxis);
+
+                                    if (success)
+                                    {
+                                        Console.WriteLine("Relative move completed successfully.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Relative move failed.");
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Target position is out of travel limit!");
+                                    return;
+                                }
+
+
+                            }
                         }
-
                     }
-
-                    if (moveType == "Absolute Move")
+                    else
                     {
-                        // Call MoveAbs
-                        bool success = trioMotionControl.MoveAbs(distances, baseAxis);
-
-                        if (success)
-                        {
-                            Console.WriteLine("Relative move completed successfully.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Relative move failed.");
-                        }
-
+                        MessageBox.Show($"Axis {axisIndex} is still Moving. Wait for idle.");
                     }
+
+                    
 
                 }
 

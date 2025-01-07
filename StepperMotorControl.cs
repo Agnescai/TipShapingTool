@@ -71,8 +71,8 @@ namespace TipShaping
         // Start continuous position reporting
         public async Task StartMonitoringPosition()
         {
-            // Wait for 1 second to ensure the serial port is open
-            await Task.Delay(1000);
+            // Wait for 0.2 second to ensure the serial port is open
+            await Task.Delay(500);
 
             // Send M114 R command to start reporting positions every second
             SendCommand("M114 R");
@@ -80,7 +80,7 @@ namespace TipShaping
             // Initialize and configure the timer
             timer = new System.Timers.Timer
             {
-                Interval = 1000, // 1 second in milliseconds
+                Interval = 200, // 100ms in milliseconds
                 AutoReset = true // Ensures the timer triggers repeatedly
             };
 
@@ -130,7 +130,7 @@ namespace TipShaping
 
             // Read the line of data received from the serial port
             string data = serialPort.ReadLine().Trim();  // Trim any unnecessary whitespace or newline characters
-            //Debug.WriteLine($"Received Data: {data}");
+            Debug.WriteLine($"Received Data: {data}");
 
             if (data.StartsWith("X:"))
             {

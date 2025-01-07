@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\TipShaping.csproj": {}
+    "C:\\Users\\Trio\\Source\\Repos\\TipShapingTool\\TipShaping.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\TipShaping.csproj": {
+    "C:\\Users\\Trio\\Source\\Repos\\TipShapingTool\\TipShaping.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\TipShaping.csproj",
+        "projectUniqueName": "C:\\Users\\Trio\\Source\\Repos\\TipShapingTool\\TipShaping.csproj",
         "projectName": "TipShaping",
-        "projectPath": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\TipShaping.csproj",
-        "packagesPath": "C:\\Users\\ying.cai\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ying.cai\\source\\repos\\TipShaping\\obj\\",
+        "projectPath": "C:\\Users\\Trio\\Source\\Repos\\TipShapingTool\\TipShaping.csproj",
+        "packagesPath": "C:\\Users\\Trio\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Trio\\Source\\Repos\\TipShapingTool\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ying.cai\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Trio\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -42,7 +38,7 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
+          "auditMode": "all"
         },
         "SdkAnalysisLevel": "9.0.100"
       },
@@ -91,7 +87,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

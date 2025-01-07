@@ -147,9 +147,9 @@
 
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="UpLeftRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" />
-            <TextBlock x:Name="UpRestTravelTextBlock" Grid.Column="2" VerticalAlignment="Center" Margin="60,0,60,0" />
-            <TextBlock x:Name="UpRightRestTravelTextBlock" Grid.Column="3" VerticalAlignment="Center" Margin="5,0,0,0" />
+            <TextBlock x:Name="UpLeftRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Visibility="Collapsed" Margin="0,0,0,0" />
+            <TextBlock x:Name="UpRestTravelTextBlock" Grid.Column="2" VerticalAlignment="Center" Visibility="Collapsed" Margin="60,0,60,0" />
+            <TextBlock x:Name="UpRightRestTravelTextBlock" Grid.Column="3" VerticalAlignment="Center" Visibility="Collapsed" Margin="5,0,0,0" />
 
         </Grid>
         
@@ -239,7 +239,7 @@
                 
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="ReverseRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" />
+            <TextBlock x:Name="ReverseRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Visibility="Collapsed" Margin="0,0,0,0" />
             
             <!-- Reverse Button -->
             <Button x:Name="ReverseButton" Grid.Column="2" VerticalAlignment="Center" Height="35" Width="60" Visibility="Collapsed"
@@ -267,7 +267,7 @@
             </Button>
 
 
-            <TextBlock x:Name="ForwardRestTravelTextBlock" Grid.Column="6" VerticalAlignment="Center" Margin="5,0,0,0" />
+            <TextBlock x:Name="ForwardRestTravelTextBlock" Grid.Column="6" VerticalAlignment="Center" Visibility="Collapsed" Margin="5,0,0,0" />
 
 
 
@@ -341,9 +341,9 @@
 
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="DownLeftRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" />
-            <TextBlock x:Name="DownRestTravelTextBlock" Grid.Column="2" VerticalAlignment="Center" Margin="60,0,60,0" />
-            <TextBlock x:Name="DownRightRestTravelTextBlock" Grid.Column="3" VerticalAlignment="Center" Margin="5,0,0,0" />
+            <TextBlock x:Name="DownLeftRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Visibility="Collapsed" Margin="0,0,0,0" />
+            <TextBlock x:Name="DownRestTravelTextBlock" Grid.Column="2" VerticalAlignment="Center" Visibility="Collapsed" Margin="60,0,60,0" />
+            <TextBlock x:Name="DownRightRestTravelTextBlock" Grid.Column="3" VerticalAlignment="Center" Visibility="Collapsed" Margin="5,0,0,0" />
 
         </Grid>
 
