@@ -40,8 +40,8 @@ namespace TipShaping
         private bool[] isAxisEnabled = { false, false, false, false, false, false };
         double[] isAxisEnabledD = { 0, 0, 0, 0, 0, 0 };
         double[] isDriveEnabledD = { 0, 0, 0, 0, 0, 0 };
-        string[] Max_Pos = { "105", "105", "35", "6", "14", "36000" }; //forward travel limit SA,SF 13mm 30mm
-        string[] Min_Pos = { "-105", "-105", "-35", "-6", "-14", "-36000" }; //reverse travel limit
+        string[] Max_Pos = { "105", "105", "35", "4.5", "29", "36000" }; //forward travel limit SA,SF 13mm 30mm
+        string[] Min_Pos = { "-105", "-105", "-35", "-1.5", "0", "-36000" }; //reverse travel limit
                                                                              //private string SAlastPosition = string.Empty;
                                                                              //private string SFlastPosition = string.Empty;
                                                                              //private string LlastPosition = string.Empty;
@@ -1009,7 +1009,7 @@ namespace TipShaping
                 {
                     //wait
                 }
-                stepperMotorControl.SendCommand("G91\n G0 X7 F120");
+                stepperMotorControl.SendCommand("G91\n G0 X-5 F120");
                 while (AxisStatus.Text == "Moving")
                 {
                     //wait
@@ -1033,7 +1033,7 @@ namespace TipShaping
                 {
                     //wait
                 }
-                stepperMotorControl.SendCommand("G91\n G0 Y15 F120");
+                stepperMotorControl.SendCommand("G91\n G0 Y0.5 F120");
                 while (AxisStatus.Text == "Moving")
                 {
                     //wait

@@ -323,7 +323,9 @@ namespace TipShaping
             }
 
             var direction = positive ? distance : $"-{distance}";
+
             gCode += $" G0 {axis}{direction} F{velocityInMMPerMinInString}";
+            Console.WriteLine(gCode);
             return gCode;
         }
 
