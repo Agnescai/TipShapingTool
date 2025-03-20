@@ -26,6 +26,8 @@ using System.Net;
 using System.IO;
 using Windows.UI.Core;
 using static System.Net.WebRequestMethods;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media.Animation;
 
 
 namespace TipShaping
@@ -37,11 +39,11 @@ namespace TipShaping
     {
 
         // Define the field
-        private bool[] isAxisEnabled = { false, false, false, false, false, false };
-        double[] isAxisEnabledD = { 0, 0, 0, 0, 0, 0 };
-        double[] isDriveEnabledD = { 0, 0, 0, 0, 0, 0 };
-        string[] Max_Pos = { "105", "105", "35", "4.5", "29", "36000" }; //forward travel limit SA,SF 13mm 30mm
-        string[] Min_Pos = { "-105", "-105", "-35", "-1.5", "0", "-36000" }; //reverse travel limit
+        private bool[] isAxisEnabled = { false, false, false, false, false, false, false };
+        double[] isAxisEnabledD = { 0, 0, 0, 0, 0, 0,0 };
+        double[] isDriveEnabledD = { 0, 0, 0, 0, 0, 0,0 };
+        string[] Max_Pos = { "105", "105", "35", "4.5", "29", "360000", "360000" }; //forward travel limit SA,SF 13mm 30mm
+        string[] Min_Pos = { "-105", "-105", "-35", "-1.5", "0", "-360000", "-360000" }; //reverse travel limit
                                                                              //private string SAlastPosition = string.Empty;
                                                                              //private string SFlastPosition = string.Empty;
                                                                              //private string LlastPosition = string.Empty;
@@ -193,13 +195,16 @@ namespace TipShaping
 
 
 
-        private void StepperMotorOnPositionUpdated(float x, float y, float z)
+        private void StepperMotorOnPositionUpdated(float x, float y, float z, float e)
         {
             // Update the UI
             SAMPosTextBox.Text = $"{x:F3}";
             SFMPosTextBox.Text = $"{y:F3}";
             double zDeg = z * 360;
-            LMPosTextBox.Text = $"{zDeg:F3}";
+            SVMPosTextBox.Text = $"{zDeg:F3}";
+
+            double eDeg = e * 360;
+            LMPosTextBox.Text = $"{eDeg:F3}";
 
 
 
@@ -478,14 +483,14 @@ namespace TipShaping
                 if (!isAxisEnabled[AxisIndex])
                 {
                     // Send G-code to enable the corresponding stepper motor 
-                    string enableCommand = "M17 Z"; // M17 is the Marlin G-code to engage stepper motors
+                    string enableCommand = "M17 E"; // M17 is the Marlin G-code to engage stepper motors
                     stepperMotorControl.SendCommand(enableCommand);
                     MessageBox.Show("L Enabled");
                 }
                 else
                 {
                     // Send G-code to disable the corresponding stepper motor
-                    string disableCommand = "M18 Z"; // M18 disengages the stepper motor
+                    string disableCommand = "M18 E"; // M18 disengages the stepper motor
                     stepperMotorControl.SendCommand(disableCommand);
                     MessageBox.Show("L Disabled");
                 }
@@ -508,10 +513,11 @@ namespace TipShaping
             {
                 "Y" => 0,
                 "X" => 1,
-                "Z" => 2,
+                "Z" => 2, 
                 "SA" => 3,
                 "SF" => 4,
-                "L" => 5,
+                "SV" => 5,
+                "L" => 6,
                 _ => -1 // Invalid axis
             };
         }
@@ -673,7 +679,7 @@ namespace TipShaping
                 }
 
 
-                if (axisName == "L")
+                if (axisName == "L" || axisName == "SV")
                 {
                     if (moveType == "Jog")
                     {
@@ -725,7 +731,7 @@ namespace TipShaping
                     trioMotionControl.Cancel(2, axisIndex);//.2 cancels all move on the base axis, 1 cancels the buffered moves on the base axis.
 
                 }
-                else if (axisName == "L") //L axis
+                else if (axisName == "L" || axisName == "SV") //L axis
                 {
                     stepperMotorControl.SendCommand("M410"); //  stop command
                 }
@@ -892,7 +898,7 @@ namespace TipShaping
 
                 }
 
-                if (axisName == "L")
+                if (axisName == "L" || axisName == "SV")
                 {
                     if (moveType == "Jog")
                     {
@@ -942,7 +948,7 @@ namespace TipShaping
                     trioMotionControl.Cancel(2, axisIndex);
 
                 }
-                else if (axisName == "L") //L axis
+                else if (axisName == "L" || axisName == "SV") //L axis
                 {
                     stepperMotorControl.SendCommand("M410"); //  stop command
                 }
@@ -1044,20 +1050,16 @@ namespace TipShaping
 
         private void HomeLButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!isAxisEnabled[5])
+            
+
+            if (!isAxisEnabled[6]) //L:6
             {
                 MessageBox.Show("Enable the axis L first.");
                 return;
             }
             else
             {
-                //SendCommand("G28 Y");
-                while (AxisStatus.Text == "Moving")
-                {
-                    //wait
-                    Debug.Print("in wait for Idle.");
-                }
-                stepperMotorControl.SendCommand("G92 Z0");
+                stepperMotorControl.SendCommand("G92 E0");
             }
 
         }
@@ -1087,8 +1089,9 @@ namespace TipShaping
             if (AxisSelection.SelectedItem is ComboBoxItem selectedItem)
             {
                 string content = selectedItem.Content.ToString();
-                DistanceUnit.Text = content == "L" ? "deg" : "mm";
-                VelocityTextBlock.Text = content == "L" ? "Velocity(rev/s):" : "Verevlocity(mm/s):";
+                DistanceUnit.Text = (content == "L" || content == "SV") ? "deg" : "mm";
+
+                VelocityTextBlock.Text = (content == "L" || content == "SV") ? "Velocity(rev/s):" : "Velocity(mm/s):";
             }
 
             HandleRotationButtonsVisibility();
@@ -1242,6 +1245,7 @@ namespace TipShaping
 
                         break;
 
+                    case "SV":
                     case "L":
 
                         if (MoveTypeSelection.SelectedItem == null)
@@ -1303,7 +1307,7 @@ namespace TipShaping
         }
 
 
-        private void RotationButton_Click(object sender, RoutedEventArgs e)
+        private void RotationButton4L_Click(object sender, RoutedEventArgs e)
         {
 
             if (sender is Button button)
@@ -1320,14 +1324,31 @@ namespace TipShaping
             handleMoveButtonsAndRestTravelTextBlockVisibility();
         }
 
-       
+
         private void HandleRotationButtonsVisibility()
         {
-            bool isAxisL = AxisSelection.SelectedItem is ComboBoxItem axisItem && axisItem.Content.ToString() == "L";
-            bool isNotJog = MoveTypeSelection.SelectedItem is ComboBoxItem moveTypeItem && moveTypeItem.Content.ToString() != "Jog";
+            // Set the visibility of the L panel, when the axis is L and the move type is not "Jog"
+            SetPanelVisibility("L", RotationButtonsPanel4L, moveTypeNotJog: true);
 
-            RotationButtonsPanel.Visibility = isAxisL && isNotJog ? Visibility.Visible : Visibility.Collapsed;
+            // Set the visibility of the SV panel, only when the axis is SV and the move type is "Absolute Move"
+            SetPanelVisibility("SV", RotationButtonsPanel4SV, moveType: "Absolute Move");
         }
+
+        void SetPanelVisibility(string axisType, UIElement panel, string moveType = null, bool moveTypeNotJog = false)
+        {
+            bool isAxisSelected = AxisSelection.SelectedItem is ComboBoxItem axisItem && axisItem.Content.ToString() == axisType;
+
+            // Get the selected move type only once
+            string selectedMoveType = (MoveTypeSelection.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+            bool isMoveTypeCorrect = moveTypeNotJog
+                ? selectedMoveType != "Jog"  // Check if the move type is not "Jog"
+                : string.IsNullOrEmpty(moveType) || selectedMoveType == moveType;  // Check if the move type matches or if moveType is not provided
+
+            // Set the visibility of the panel based on the axis type and move type
+            panel.Visibility = isAxisSelected && isMoveTypeCorrect ? Visibility.Visible : Visibility.Collapsed;
+        }
+
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
@@ -1588,11 +1609,61 @@ namespace TipShaping
                     if (moveType == "Jog")
                     {
                         double.TryParse(Max_Pos[axisIndex], out double MaxJogPos);
-                        MaxJogPos = MaxJogPos - 0.1;
+                        //MaxJogPos = MaxJogPos-0.1;
                         distance = MaxJogPos.ToString();
+
+                        var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: true);
+                        stepperMotorControl.SendCommand(command);
                     }
-                    var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: true);
-                    stepperMotorControl.SendCommand(command);
+
+                    if (moveType == "Absolute Move")
+                    {
+                        if (double.Parse(distance) > double.Parse(Min_Pos[axisIndex]) && double.Parse(distance) < double.Parse(Max_Pos[axisIndex]))
+                        {
+                            var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: true);
+                            stepperMotorControl.SendCommand(command);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Error: Target distance is out of limit!");
+                        }
+
+                    }
+                    if (moveType == "Relative Move")
+                    {
+                        if (axisName == "SA")
+                        {
+                            if ((double.Parse(SAMPosTextBox.Text) + double.Parse(distance)) > double.Parse(Min_Pos[axisIndex]) && (double.Parse(SAMPosTextBox.Text) + double.Parse(distance)) < double.Parse(Max_Pos[axisIndex]))
+                            {
+                                var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: true);
+                                stepperMotorControl.SendCommand(command);
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Error: Target distance is out of limit!");
+                            }
+                        }
+                        
+                        if (axisName == "SF")
+                        {
+                            if ((double.Parse(SFMPosTextBox.Text) + double.Parse(distance)) > double.Parse(Min_Pos[axisIndex]) && (double.Parse(SFMPosTextBox.Text) + double.Parse(distance)) < double.Parse(Max_Pos[axisIndex]))
+                            {
+                                var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: true);
+                                stepperMotorControl.SendCommand(command);
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Error: Target distance is out of limit!");
+                            }
+                        }
+
+                       
+
+                    }
+
+
+
+
                 }
 
 
@@ -1627,7 +1698,7 @@ namespace TipShaping
                     trioMotionControl.Cancel(2, axisIndex);
 
                 }
-                else if (axisName == "L") //L axis
+                else if (axisName == "SF" || axisName == "SA") 
                 {
                     stepperMotorControl.SendCommand("M410"); //  stop command
                 }
@@ -1798,12 +1869,63 @@ namespace TipShaping
                     if (moveType == "Jog")
                     {
                         double.TryParse(Min_Pos[axisIndex], out double MinJogPos);
-                        MinJogPos = Math.Abs(MinJogPos) - 0.1;
+                        // MinJogPos = MinJogPos;
                         distance = MinJogPos.ToString();
+
+                        var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: true);//use true
+                        stepperMotorControl.SendCommand(command);
                     }
-                    var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: false);
-                    stepperMotorControl.SendCommand(command);
+                   
+
+                    if (moveType == "Absolute Move")
+                    {
+                        if (double.Parse(distance) > double.Parse(Min_Pos[axisIndex]) && double.Parse(distance) < double.Parse(Max_Pos[axisIndex]))
+                        {
+                            var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: false);
+                            stepperMotorControl.SendCommand(command);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Error: Target distance is out of limit!");
+                        }
+
+                    }
+                    if (moveType == "Relative Move")
+                    {
+                        if (axisName == "SA")
+                        {
+                            if ((double.Parse(SAMPosTextBox.Text) - double.Parse(distance)) > double.Parse(Min_Pos[axisIndex]) && (double.Parse(SAMPosTextBox.Text) - double.Parse(distance)) < double.Parse(Max_Pos[axisIndex]))
+                            {
+                                var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: false);
+                                stepperMotorControl.SendCommand(command);
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Error: Target distance is out of limit!");
+                            }
+                        }
+
+                        if (axisName == "SF")
+                        {
+                            if ((double.Parse(SFMPosTextBox.Text) - double.Parse(distance)) > double.Parse(Min_Pos[axisIndex]) && (double.Parse(SFMPosTextBox.Text) - double.Parse(distance)) < double.Parse(Max_Pos[axisIndex]))
+                            {
+                                var command = stepperMotorControl.GenerateGCode(axisName, velocity, distance, moveType, positive: false);
+                                stepperMotorControl.SendCommand(command);
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Error: Target distance is out of limit!");
+                            }
+                        }
+
+
+
+                    }
+
                 }
+
+
+
 
 
             }
@@ -1835,7 +1957,7 @@ namespace TipShaping
                     trioMotionControl.Cancel(2, axisIndex);
 
                 }
-                else if (axisName == "L") //L axis
+                else if (axisName == "SF" || axisName == "SA")
                 {
                     stepperMotorControl.SendCommand("M410"); //  stop command
                 }
@@ -1893,6 +2015,83 @@ namespace TipShaping
             trioMotionControl.DisconnectToController("127.0.0.1");
             trioMotionControl?.Dispose();
             Debug.Print("Trio Controller is disconnected.");
+        }
+
+        private void HomeSVButton_Click(object sender, RoutedEventArgs e)
+        {
+            int AxisIndex = GetAxisIndex("SV");
+            if (!isAxisEnabled[AxisIndex])//SV:5
+            {
+                MessageBox.Show("Enable the axis SV first.");
+                return;
+            }
+            else
+            {
+                stepperMotorControl.SendCommand("G28 Z");
+                while (AxisStatus.Text == "Moving")
+                {
+                    //wait
+                }
+
+                stepperMotorControl.SendCommand("G92 Z0");
+            }
+        }
+
+        private void EnableSVButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (stepperMotorControl.serialPort.IsOpen)
+            {
+                int AxisIndex = GetAxisIndex("SV");
+                if (!isAxisEnabled[AxisIndex])
+                {
+                    // Send G-code to enable the corresponding stepper motor 
+                    string enableCommand = "M17 Z"; // M17 is the Marlin G-code to engage stepper motors
+                    stepperMotorControl.SendCommand(enableCommand);
+                    MessageBox.Show("SV Enabled");
+                }
+                else
+                {
+                    // Send G-code to disable the corresponding stepper motor
+                    string disableCommand = "M18 Z"; // M18 disengages the stepper motor
+                    stepperMotorControl.SendCommand(disableCommand);
+                    MessageBox.Show("SV Disabled");
+                }
+                isAxisEnabled[AxisIndex] = !isAxisEnabled[AxisIndex];
+                // Update the button content
+                EnableSVButton.Content = isAxisEnabled[AxisIndex] ? "Disable SV" : "Enable SV";
+            }
+            else
+            { MessageBox.Show("BigTech Controller is not connected!"); }
+        }
+
+        private void RotationButton4SV_Click(object sender, RoutedEventArgs e)
+        {
+            // Get the clicked button
+            Button clickedButton = sender as Button;
+            if (clickedButton != null)
+            {
+                // Get the button's name, e.g., "RotationSV1", "RotationSV2", etc.
+                string buttonName = clickedButton.Name;
+
+                // Extract the number from the button name, e.g., "1" from "RotationSV1"
+                string numberPart = new string(buttonName.Where(char.IsDigit).ToArray());
+
+                // Try to parse the number
+                if (int.TryParse(numberPart, out int buttonNumber))
+                {
+                    // Perform the calculation
+                    double result = 360.0 / 27 * (buttonNumber-1);
+
+                    // Set the DistanceInput.Text based on the result
+                    DistanceInput.Text = result.ToString("F3");
+                }
+                else
+                {
+                    // Handle error if no numeric value is found
+                    DistanceInput.Text = "Error";
+                }
+            }
         }
     }
 }

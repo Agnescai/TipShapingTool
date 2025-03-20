@@ -3,24 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\triomotioncontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:triomotioncontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\steppermotorcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:steppermotorcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\bigtechcontrollerconnection.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:bigtechcontrollerconnection.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\triomotioncontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|solutionrelative:triomotioncontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C88B20E2-48E4-4454-91CF-E97B0DFAF09A}|TipShaping.csproj|c:\\users\\trio\\source\\repos\\tipshapingtool\\triocontrollerconnection.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -53,35 +53,48 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-03-19T18:51:56.316Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\MainWindow.xaml.cs",
               "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAACsAAAA+AAAAAAAAAA==",
+              "ViewState": "AgIAAEsGAAAAAAAAAAAMwFIGAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-20T07:55:58.978Z"
+              "WhenOpened": "2024-11-20T07:55:58.978Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "StepperMotorControl.cs",
               "DocumentMoniker": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\StepperMotorControl.cs",
               "RelativeDocumentMoniker": "StepperMotorControl.cs",
               "ToolTip": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\StepperMotorControl.cs",
               "RelativeToolTip": "StepperMotorControl.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAswEIAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAADcAAAAAAAAAAAAgwEUAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-03T23:40:05.349Z"
+              "WhenOpened": "2025-01-03T23:40:05.349Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "BigTechControllerConnection.xaml",
               "DocumentMoniker": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\BigTechControllerConnection.xaml",
               "RelativeDocumentMoniker": "BigTechControllerConnection.xaml",
@@ -92,16 +105,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "TrioMotionControl.cs",
               "DocumentMoniker": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\TrioMotionControl.cs",
               "RelativeDocumentMoniker": "TrioMotionControl.cs",
               "ToolTip": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\TrioMotionControl.cs",
               "RelativeToolTip": "TrioMotionControl.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAAAgwDUAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAA1wCYAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-27T20:46:08.851Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-27T20:46:08.851Z"
             },
             {
               "$type": "Document",
@@ -173,39 +185,6 @@
               "ViewState": "AgIAACgAAAAAAAAAAAAywDYAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-29T00:09:19.68Z"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Orientation": 0,
-      "VerticalTabListWidth": 256,
-      "FloatingWindowState": {
-        "Id": "1c6dd6a7-a220-4a3f-a6d9-dad7c2ca4a9e",
-        "Display": 0,
-        "X": 166,
-        "Y": 65,
-        "Width": 1419,
-        "Height": 891,
-        "WindowState": 0
-      },
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "MainWindow.xaml",
-              "ToolTip": "C:\\Users\\Trio\\source\\repos\\TipShapingTool\\MainWindow.xaml",
-              "RelativeToolTip": "MainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-11-20T07:55:55.646Z",
-              "EditorCaption": ""
             }
           ]
         }

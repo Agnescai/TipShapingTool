@@ -60,7 +60,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
-                
+                <ColumnDefinition Width="*"/>
+
             </Grid.ColumnDefinitions>
 
             <TextBlock x:Name="XMPosIndex" Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="X" TextAlignment="Center"  Margin="5,5,5,0" />
@@ -68,30 +69,34 @@
             <TextBlock x:Name="ZMPosIndex" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="Z" TextAlignment="Center" Margin="5,5,5,0"  />
             <TextBlock x:Name="SAMPosIndex" Grid.Row="0" Grid.Column="3" TextWrapping="Wrap" Text="SA" TextAlignment="Center" Margin="5,5,5,0" />
             <TextBlock x:Name="SFMPosIndex" Grid.Row="0" Grid.Column="4" TextWrapping="Wrap" Text="SF" TextAlignment="Center" Margin="5,5,5,0" />
-            <TextBlock x:Name="LMPosIndex" Grid.Row="0" Grid.Column="5" TextWrapping="Wrap" Text="L" TextAlignment="Center" Margin="5,5,5,0" />
-            <TextBlock x:Name="AxisStatusTextBlock" Grid.Row="0" Grid.Column="6" TextWrapping="Wrap" Text="Axis status" TextAlignment="Center" Margin="5,5,5,0" />
+            <TextBlock x:Name="SVMPosIndex" Grid.Row="0" Grid.Column="5" TextWrapping="Wrap" Text="SV" TextAlignment="Center" Margin="5,5,5,0" />
+            <TextBlock x:Name="LMPosIndex" Grid.Row="0" Grid.Column="6" TextWrapping="Wrap" Text="L" TextAlignment="Center" Margin="5,5,5,0" />
+            <TextBlock x:Name="AxisStatusTextBlock" Grid.Row="0" Grid.Column="7" TextWrapping="Wrap" Text="Axis status" TextAlignment="Center" Margin="5,5,5,0" />
 
             <TextBox x:Name="XMPosTextBox" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" TextAlignment="Center"  Margin="5,5,5,0" />
             <TextBox x:Name="YMPosTextBox" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Center" Margin="5,5,5,0"/>
             <TextBox x:Name="ZMPosTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" TextAlignment="Center" Margin="5,5,5,0"/>
             <TextBox x:Name="SAMPosTextBox" Grid.Row="1" Grid.Column="3" TextWrapping="Wrap" TextAlignment="Center" Margin="5,5,5,0"/>
             <TextBox x:Name="SFMPosTextBox" Grid.Row="1" Grid.Column="4" TextWrapping="Wrap" TextAlignment="Center" Margin="5,5,5,0" />
-            <TextBox x:Name="LMPosTextBox" Grid.Row="1" Grid.Column="5" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,5,5,0"/>
-            <TextBox x:Name="AxisStatus" Grid.Row="1" Grid.Column="6" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,5,5,0" />
+            <TextBox x:Name="SVMPosTextBox" Grid.Row="1" Grid.Column="5" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,5,5,0"/>
+            <TextBox x:Name="LMPosTextBox" Grid.Row="1" Grid.Column="6" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,5,5,0"/>
+            <TextBox x:Name="AxisStatus" Grid.Row="1" Grid.Column="7" TextWrapping="Wrap"  TextAlignment="Center" Margin="5,5,5,0" />
 
             <Button x:Name="EnableXButton" Content="Enable X" Grid.Row="2" Grid.Column="0" Click="EnableXButton_Click" Margin="5,5,5,0"/>
             <Button x:Name="EnableYButton" Content="Enable Y" Grid.Row="2" Grid.Column="1" Click="EnableYButton_Click" Margin="5,5,5,0"/>
             <Button x:Name="EnableZButton" Content="Enable Z" Grid.Row="2" Grid.Column="2" Click="EnableZButton_Click" Margin="5,5,5,0"/>
             <Button x:Name="EnableSAButton" Content="Enable SA" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" Click="EnableSAButton_Click" Margin="5,5,5,0"/>
             <Button x:Name="EnableSFButton" Content="Enable SF" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Click="EnableSFButton_Click" Margin="5,5,5,0"/>
-            <Button x:Name="EnableLButton" Content="Enable L" Grid.Row="2" Grid.Column="5" VerticalAlignment="Center" Click="EnableLButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="EnableSVButton" Content="Enable SV" Grid.Row="2" Grid.Column="5" VerticalAlignment="Bottom" Click="EnableSVButton_Click" Margin="5,0,4,25" Grid.RowSpan="2"/>
+            <Button x:Name="EnableLButton" Content="Enable L" Grid.Row="2" Grid.Column="6" VerticalAlignment="Center" Click="EnableLButton_Click" Margin="5,5,5,0"/>
 
             <Button x:Name="HomeXButton" Content="Home X" Grid.Row="3" Grid.Column="0" Click="HomeXButton_Click" Margin="5,5,5,0"/>
             <Button x:Name="HomeYButton" Content="Home Y" Grid.Row="3" Grid.Column="1" Click="HomeYButton_Click" Margin="5,5,5,0"/>
             <Button x:Name="HomeZButton" Content="Home Z" Grid.Row="3" Grid.Column="2" Click="HomeZButton_Click" Margin="5,5,5,0"/>
             <Button x:Name="HomeSAButton" Content="Home SA" Grid.Row="3" Grid.Column="3" Click="HomeSAButton_Click" Margin="5,5,5,0"/>
-            <Button x:Name="HomeSFButton" Content="Home SF" Grid.Row="3" Grid.Column="4" Click="HomeSFButton_Click" Margin="5,5,5,0"/>
-            <Button x:Name="HomeLButton" Content="Home L" Grid.Row="3" Grid.Column="5" Click="HomeLButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="HomeSFButton" Content="Home SF" Grid.Row="3" Grid.Column="4" Click="HomeSFButton_Click" Margin="5,5,5,0" Height="20" VerticalAlignment="Top"/>
+            <Button x:Name="HomeSVButton" Content="Home SV" Grid.Row="3" Grid.Column="5" Click="HomeSVButton_Click" Margin="5,5,5,0"/>
+            <Button x:Name="HomeLButton" Content="Home L" Grid.Row="3" Grid.Column="6" Click="HomeLButton_Click" Margin="5,5,5,0"/>
         </Grid>
 
         <Grid Grid.Row="3" Margin="5,5,5,0">
@@ -118,6 +123,7 @@
                 <ComboBoxItem Content="Z" />
                 <ComboBoxItem Content="SA" />
                 <ComboBoxItem Content="SF" />
+                <ComboBoxItem Content="SV" />
                 <ComboBoxItem Content="L" />
             </ComboBox>
 
@@ -133,7 +139,7 @@
             <TextBlock x:Name="VelocityTextBlock" Grid.Column="4" Text="Velocity(mm/s):" VerticalAlignment="Center" Margin="20,0,0,0" />
             <TextBox x:Name="VelocityInput" Grid.Column="5" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,0,0" />
         </Grid>
-        
+
         <Grid Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,5,5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -152,7 +158,7 @@
             <TextBlock x:Name="UpRightRestTravelTextBlock" Grid.Column="3" VerticalAlignment="Center" Visibility="Collapsed" Margin="5,0,0,0" />
 
         </Grid>
-        
+
         <Grid Grid.Row="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,5,5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -225,22 +231,22 @@
                 <!-- Spacer for ForwardButton -->
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                
+
                 <ColumnDefinition Width="Auto" />
-                
+
                 <ColumnDefinition Width="Auto" />
-                
+
                 <ColumnDefinition Width="Auto" />
-              
+
                 <ColumnDefinition Width="Auto" />
-                
-               
+
+
                 <ColumnDefinition Width="*" />
-                
+
             </Grid.ColumnDefinitions>
 
             <TextBlock x:Name="ReverseRestTravelTextBlock" Grid.Column="1" VerticalAlignment="Center" Visibility="Collapsed" Margin="0,0,0,0" />
-            
+
             <!-- Reverse Button -->
             <Button x:Name="ReverseButton" Grid.Column="2" VerticalAlignment="Center" Height="35" Width="60" Visibility="Collapsed"
             Background="Transparent" BorderBrush="Transparent" 
@@ -347,19 +353,44 @@
 
         </Grid>
 
-        <UniformGrid Grid.Row="9" Rows="1"  x:Name="RotationButtonsPanel" Height="20"  Visibility="Collapsed" Margin="5,5,5,0">
-            <Button  x:Name="Rotation1" Content="30" Width="25" Height="20" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation2" Content="60" Width="25" Height="20" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation3" Content="90" Width="25" Height="20" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation4" Content="120" Width="25" Height="20" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation5" Content="150" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation6" Content="180" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation7" Content="210" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation8" Content="240" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation9" Content="270" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation10" Content="300" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation11" Content="330" Height="20" Width="25" Click="RotationButton_Click"/>
-            <Button  x:Name="Rotation12" Content="360" Width="25" Height="20" Click="RotationButton_Click"/>
+        <UniformGrid Grid.Row="9" Rows="1"  x:Name="RotationButtonsPanel4L" Height="20"  Visibility="Collapsed" Margin="5,5,5,0">
+
+            <Button  x:Name="RotationL1" Content="90" Height="20" Width="25" Click="RotationButton4L_Click"/>
+            <Button  x:Name="RotationL2" Content="180" Height="20" Width="25" Click="RotationButton4L_Click"/>
+            <Button  x:Name="RotationL3" Content="360" Height="20" Width="25" Click="RotationButton4L_Click"/>
+            <Button  x:Name="RotationL4" Content="450" Height="20" Width="25" Click="RotationButton4L_Click"/>
+            <Button  x:Name="RotationL5" Content="900" Height="20" Width="25" Click="RotationButton4L_Click"/>
+            <Button  x:Name="RotationL6" Content="1800" Width="40" Height="20" Click="RotationButton4L_Click"/>
+        </UniformGrid>
+
+        <UniformGrid Grid.Row="9" Rows="1"  x:Name="RotationButtonsPanel4SV" Height="20"  Visibility="Collapsed" Margin="5,5,5,0">
+            <Button  x:Name="RotationSV1" Content="Y1" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV2" Content="Y2" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV3" Content="Y3" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV4" Content="Y4" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV5" Content="Y5" Height="20" Width="25" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV6" Content="Y6" Height="20" Width="25" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV7" Content="Y7" Height="20" Width="25" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV8" Content="Y8" Height="20" Width="25" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV9" Content="Y9" Height="20" Width="25" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV10" Content="X1" Height="20" Width="25" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV11" Content="X2" Height="20" Width="25" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV12" Content="X3" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV13" Content="X4" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV14" Content="X5" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV15" Content="X6" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV16" Content="X'1" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV17" Content="X'2" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV18" Content="X'3" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV19" Content="X'4" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV20" Content="X'5" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV21" Content="X'6" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV22" Content="ZA1" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV23" Content="ZA2" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV24" Content="ZA3" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV25" Content="ZA4" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV26" Content="Z1" Width="25" Height="20" Click="RotationButton4SV_Click"/>
+            <Button  x:Name="RotationSV27" Content="Z2" Width="25" Height="20" Click="RotationButton4SV_Click"/>
         </UniformGrid>
 
         <Grid Grid.Row="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,15,0,0">

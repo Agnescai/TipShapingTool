@@ -18,11 +18,12 @@ namespace TipShaping
         float XlastPosition = 0;
         float YlastPosition = 0;
         float ZlastPosition = 0;
+        float ElastPosition = 0;
         bool isInitial = true;
         private const float Threshold = 0.001f;  // Example: 0.001 mm as the threshold
         System.Timers.Timer timer;
 
-        public delegate void PositionUpdateHandler(float x, float y, float z);
+        public delegate void PositionUpdateHandler(float x, float y, float z, float e);
         public event PositionUpdateHandler PositionUpdated;
 
         public delegate void MovingStatusUpdateHandler(bool Moving);
@@ -57,16 +58,18 @@ namespace TipShaping
                         Regex regexX = new Regex(@"X:\s*(-?\d+(\.\d+)?)");
                         Regex regexY = new Regex(@"Y:\s*(-?\d+(\.\d+)?)");
                         Regex regexZ = new Regex(@"Z:\s*(-?\d+(\.\d+)?)");
+                        Regex regexE = new Regex(@"E:\s*(-?\d+(\.\d+)?)");
 
                         // Extract X, Y, and Z values
                         float xValue = ExtractValue(regexX, data);
                         float yValue = ExtractValue(regexY, data);
                         float zValue = ExtractValue(regexZ, data);
+                        float eValue = ExtractValue(regexE, data);
 
                         // Raise the PositionUpdated event on the main thread
                         Application.Current.Dispatcher.Invoke(() =>
                         {
-                            PositionUpdated?.Invoke(xValue, yValue, zValue);
+                            PositionUpdated?.Invoke(xValue, yValue, zValue, eValue);
                         });
 
                         //Dispatcher.Invoke(() => UpdatePositionDisplay(xValue.ToString(), yValue.ToString(), zValue.ToString()));
@@ -76,6 +79,7 @@ namespace TipShaping
                             XlastPosition = xValue;
                             YlastPosition = yValue;
                             ZlastPosition = zValue;
+                            ElastPosition = eValue;
                             isInitial = false;
                         }
 
@@ -83,13 +87,14 @@ namespace TipShaping
                         // Update the UI to show "Moving"
                         if (HasSignificantMovement(xValue, XlastPosition, Threshold) ||
                             HasSignificantMovement(yValue, YlastPosition, Threshold) ||
-                            HasSignificantMovement(zValue, ZlastPosition, Threshold))
+                            HasSignificantMovement(zValue, ZlastPosition, Threshold) || 
+                            HasSignificantMovement(eValue, ElastPosition, Threshold))
                         {
                             // Update last known positions if significant movement is detected
                             XlastPosition = xValue;
                             YlastPosition = yValue;
                             ZlastPosition = zValue;
-
+                            ElastPosition = eValue;
 
 
                             // Update the UI to show "Moving"
@@ -213,7 +218,7 @@ namespace TipShaping
 
             // Read the line of data received from the serial port
             string data = serialPort.ReadLine().Trim();  // Trim any unnecessary whitespace or newline characters
-            Debug.WriteLine($"Received Data: {data}");
+            //Debug.WriteLine($"Received Data: {data}");
 
             //if (data.StartsWith("X:"))
             //{
@@ -285,7 +290,8 @@ namespace TipShaping
             {
                 "SA" => "X",
                 "SF" => "Y",
-                "L" => "Z",
+                "SV" => "Z",
+                "L" => "E",
                 _ => throw new ArgumentException("Invalid axis name.") // Handle unknown axis names
             };
 
