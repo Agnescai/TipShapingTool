@@ -2071,17 +2071,24 @@ namespace TipShaping
             Button clickedButton = sender as Button;
             if (clickedButton != null)
             {
+                
+                foreach (Button btn in RotationButtonsPanel4SV.Children)
+                {
+                    btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE5E5E5")); // Reset background color to light gray
+                }
+
+                // Set background color to green only for the clicked button
+                clickedButton.Background = Brushes.Green;
+
                 // Get the button's name, e.g., "RotationSV1", "RotationSV2", etc.
                 string buttonName = clickedButton.Name;
 
-                // Extract the number from the button name, e.g., "1" from "RotationSV1"
+                // Extract the numeric part from the button's name
                 string numberPart = new string(buttonName.Where(char.IsDigit).ToArray());
 
-                // Try to parse the number
                 if (int.TryParse(numberPart, out int buttonNumber))
                 {
-                    // Perform the calculation
-                    double result = 360.0 / 27 * (buttonNumber-1);
+                    double result = 360.0 / 27 * (buttonNumber - 1);
 
                     // Set the DistanceInput.Text based on the result
                     DistanceInput.Text = result.ToString("F3");
@@ -2093,5 +2100,6 @@ namespace TipShaping
                 }
             }
         }
+
     }
 }
